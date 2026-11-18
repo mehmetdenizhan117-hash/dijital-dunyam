@@ -1,0 +1,4186 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0d9488">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Dijital Dünyam">
+<title>Dijital Dünyam • Psikolojik Rehberlik ve Öğrenci Gelişim Platformu</title>
+
+<style>
+:root {
+ --bg: #f1f5f9;
+ --surface: #ffffff;
+ --surface-soft: #f8fafc;
+ --glass: rgba(255, 255, 255, 0.85);
+ --glass-dark: rgba(15, 23, 42, 0.78);
+ --text: #0f172a;
+ --text-muted: #64748b;
+ --border: #e2e8f0;
+ --primary: #0d9488;
+ --primary-light: #ccfbf1;
+ --primary-dark: #0f766e;
+ --accent: #6366f1;
+ --accent-light: #e0e7ff;
+ --header-bg: radial-gradient(circle at 12% 15%, #1e293b 0%, #0f172a 48%, #0d9488 128%);
+ --shadow-sm: 0 2px 10px rgba(15, 23, 42, 0.04);
+ --shadow: 0 12px 32px -6px rgba(15, 23, 42, 0.08);
+ --success-bg: #dcfce7;
+ --success-border: #22c55e;
+ --success-text: #14532d;
+ --error-bg: #fee2e2;
+ --error-border: #ef4444;
+ --error-text: #7f1d1d;
+ --warn-bg: #fef3c7;
+ --warn-text: #92400e;
+}
+
+body.dark {
+ --bg: #060a12;
+ --surface: #111827;
+ --surface-soft: #1e293b;
+ --glass: rgba(17, 24, 39, 0.88);
+ --glass-dark: rgba(6, 10, 18, 0.85);
+ --text: #f8fafc;
+ --text-muted: #94a3b8;
+ --border: #1f2937;
+ --primary: #2dd4bf;
+ --primary-light: rgba(45, 212, 191, 0.14);
+ --primary-dark: #14b8a6;
+ --accent: #818cf8;
+ --accent-light: rgba(129, 140, 248, 0.16);
+ --header-bg: radial-gradient(circle at 12% 15%, #090d16 0%, #0f172a 55%, #115e59 128%);
+ --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.35);
+ --shadow: 0 14px 36px -6px rgba(0, 0, 0, 0.5);
+ --success-bg: rgba(34, 197, 94, 0.16);
+ --success-border: #22c55e;
+ --success-text: #bbf7d0;
+ --error-bg: rgba(239, 68, 68, 0.16);
+ --error-border: #ef4444;
+ --error-text: #fecaca;
+ --warn-bg: rgba(245, 158, 11, 0.16);
+ --warn-text: #fde68a;
+}
+
+* {
+ box-sizing: border-box;
+ -webkit-tap-highlight-color: transparent;
+}
+
+body {
+ margin: 0;
+ background: var(--bg);
+ color: var(--text);
+ font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+ padding-bottom: 112px;
+ transition: background 0.25s ease, color 0.25s ease;
+ line-height: 1.55;
+ overflow-x: hidden;
+}
+
+/* CONFETTI CANVAS */
+#confettiCanvas {
+ position: fixed;
+ top: 0;
+ left: 0;
+ width: 100%;
+ height: 100%;
+ pointer-events: none;
+ z-index: 999;
+}
+
+/* STICKY GLASS TOP BAR */
+.sticky-bar {
+ position: sticky;
+ top: 0;
+ z-index: 30;
+ background: var(--glass-dark);
+ backdrop-filter: blur(18px);
+ -webkit-backdrop-filter: blur(18px);
+ border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+ padding: 10px 16px;
+ color: #fff;
+}
+
+.sticky-inner {
+ max-width: 680px;
+ margin: auto;
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ gap: 8px;
+}
+
+.brand-wrap {
+ display: flex;
+ align-items: center;
+ gap: 9px;
+ font-size: 12px;
+ font-weight: 800;
+ letter-spacing: 0.7px;
+}
+
+.brand-logo {
+ width: 30px;
+ height: 30px;
+ border-radius: 9px;
+ background: linear-gradient(135deg, #2dd4bf 0%, #6366f1 100%);
+ display: grid;
+ place-items: center;
+ font-weight: 900;
+ font-size: 12px;
+ color: #0f172a;
+ box-shadow: 0 4px 12px rgba(45, 212, 191, 0.35);
+}
+
+.header-actions {
+ display: flex;
+ align-items: center;
+ gap: 5px;
+}
+
+.pill-badge {
+ background: rgba(255, 255, 255, 0.12);
+ padding: 4px 9px;
+ border-radius: 999px;
+ font-size: 11px;
+ font-weight: 700;
+ color: #fff;
+ border: 1px solid rgba(255, 255, 255, 0.15);
+ white-space: nowrap;
+}
+
+.icon-btn {
+ background: rgba(255, 255, 255, 0.12);
+ border: 1px solid rgba(255, 255, 255, 0.16);
+ color: #fff;
+ width: 32px;
+ height: 32px;
+ border-radius: 10px;
+ cursor: pointer;
+ display: grid;
+ place-items: center;
+ font-size: 14px;
+ transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.icon-btn:hover { background: rgba(255, 255, 255, 0.22); }
+.icon-btn:active { transform: scale(0.92); }
+
+/* SLIDE-OVER SIDE DRAWER MENU */
+.drawer-backdrop {
+ position: fixed;
+ inset: 0;
+ background: rgba(15, 23, 42, 0.58);
+ backdrop-filter: blur(4px);
+ -webkit-backdrop-filter: blur(4px);
+ z-index: 60;
+ opacity: 0;
+ pointer-events: none;
+ transition: opacity 0.25s ease;
+}
+
+.drawer-backdrop.open {
+ opacity: 1;
+ pointer-events: auto;
+}
+
+.side-drawer {
+ position: fixed;
+ top: 0;
+ left: 0;
+ bottom: 0;
+ width: 295px;
+ max-width: 84vw;
+ background: var(--surface);
+ border-right: 1px solid var(--border);
+ z-index: 70;
+ transform: translateX(-104%);
+ transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+ display: flex;
+ flex-direction: column;
+ box-shadow: 16px 0 40px rgba(0, 0, 0, 0.22);
+}
+
+.side-drawer.open {
+ transform: translateX(0);
+}
+
+.drawer-head {
+ background: var(--header-bg);
+ color: #ffffff;
+ padding: 18px 16px;
+ display: flex;
+ justify-content: space-between;
+ align-items: flex-start;
+ gap: 10px;
+}
+
+.drawer-user-info strong {
+ display: block;
+ font-size: 15px;
+ margin-top: 6px;
+}
+
+.drawer-user-info small {
+ font-size: 12px;
+ color: #cbd5e1;
+}
+
+.drawer-body {
+ flex: 1;
+ overflow-y: auto;
+ padding: 12px;
+}
+
+.drawer-section-title {
+ font-size: 10.5px;
+ font-weight: 800;
+ text-transform: uppercase;
+ letter-spacing: 0.8px;
+ color: var(--text-muted);
+ margin: 10px 8px 6px;
+}
+
+.drawer-item {
+ width: 100%;
+ display: flex;
+ align-items: center;
+ gap: 11px;
+ padding: 10px 12px;
+ border: 0;
+ border-radius: 13px;
+ background: transparent;
+ color: var(--text);
+ font-size: 13.5px;
+ font-weight: 600;
+ text-align: left;
+ cursor: pointer;
+ transition: all 0.16s ease;
+ margin-bottom: 3px;
+}
+
+.drawer-item:hover {
+ background: var(--surface-soft);
+}
+
+.drawer-item.active {
+ background: var(--primary-light);
+ color: var(--primary-dark);
+ font-weight: 700;
+}
+
+body.dark .drawer-item.active {
+ color: #5eead4;
+}
+
+.drawer-item .d-ico {
+ width: 30px;
+ height: 30px;
+ border-radius: 9px;
+ background: var(--surface-soft);
+ border: 1px solid var(--border);
+ display: grid;
+ place-items: center;
+ font-size: 15px;
+ flex-shrink: 0;
+}
+
+.drawer-item.active .d-ico {
+ background: var(--surface);
+ border-color: var(--primary);
+}
+
+.drawer-item .d-meta {
+ flex: 1;
+ line-height: 1.25;
+}
+
+.drawer-item .d-meta small {
+ display: block;
+ font-size: 11px;
+ font-weight: 500;
+ color: var(--text-muted);
+ margin-top: 2px;
+}
+
+.drawer-shortcuts {
+ display: grid;
+ grid-template-columns: 1fr 1fr;
+ gap: 7px;
+ margin-top: 4px;
+}
+
+.shortcut-pill {
+ padding: 9px 10px;
+ border-radius: 12px;
+ border: 1px solid var(--border);
+ background: var(--surface-soft);
+ color: var(--text);
+ font-size: 12px;
+ font-weight: 600;
+ text-align: left;
+ cursor: pointer;
+ transition: border-color 0.15s ease;
+}
+
+.shortcut-pill:hover {
+ border-color: var(--primary);
+}
+
+.drawer-foot {
+ padding: 12px;
+ border-top: 1px solid var(--border);
+ background: var(--surface-soft);
+ display: flex;
+ gap: 8px;
+}
+
+/* HERO HEADER */
+header {
+ background: var(--header-bg);
+ color: #ffffff;
+ padding: 20px 18px 46px;
+ border-radius: 0 0 34px 34px;
+ box-shadow: 0 16px 38px rgba(15, 23, 42, 0.18);
+ position: relative;
+ overflow: hidden;
+}
+
+header::before {
+ content: "";
+ position: absolute;
+ top: -50px;
+ right: -30px;
+ width: 200px;
+ height: 200px;
+ border-radius: 50%;
+ background: radial-gradient(circle, rgba(45, 212, 191, 0.25) 0%, transparent 70%);
+ pointer-events: none;
+}
+
+.header-inner {
+ max-width: 680px;
+ margin: auto;
+ position: relative;
+ z-index: 1;
+}
+
+header h1 {
+ font-size: 26px;
+ font-weight: 800;
+ margin: 4px 0 4px;
+ letter-spacing: -0.6px;
+}
+
+.date-subtitle {
+ color: #cbd5e1;
+ font-size: 13px;
+ margin: 0;
+ opacity: 0.92;
+}
+
+/* CONTAINER & BENTO CARDS */
+.container {
+ max-width: 680px;
+ margin: -24px auto 0;
+ padding: 0 15px;
+ position: relative;
+ z-index: 2;
+}
+
+.card {
+ background: var(--surface);
+ border: 1px solid var(--border);
+ border-radius: 24px;
+ padding: 20px;
+ margin-bottom: 16px;
+ box-shadow: var(--shadow);
+ transition: background 0.25s ease, border-color 0.25s ease;
+}
+
+.section-tag {
+ display: inline-flex;
+ align-items: center;
+ gap: 5px;
+ font-size: 10.5px;
+ font-weight: 800;
+ text-transform: uppercase;
+ letter-spacing: 0.9px;
+ color: var(--primary);
+ background: var(--primary-light);
+ padding: 4px 10px;
+ border-radius: 999px;
+ margin: 0 0 8px;
+}
+
+h2 {
+ font-size: 18px;
+ font-weight: 800;
+ margin: 0 0 10px;
+ letter-spacing: -0.3px;
+}
+
+h3 {
+ font-size: 15.5px;
+ font-weight: 700;
+ margin: 0 0 10px;
+}
+
+.muted {
+ color: var(--text-muted);
+ font-size: 13.5px;
+ margin: 0;
+}
+
+/* SEGMENTED SUB-TABS */
+.sub-nav {
+ display: flex;
+ gap: 6px;
+ background: var(--surface);
+ border: 1px solid var(--border);
+ padding: 5px;
+ border-radius: 16px;
+ margin-bottom: 14px;
+ overflow-x: auto;
+ scrollbar-width: none;
+ box-shadow: var(--shadow-sm);
+}
+
+.sub-nav::-webkit-scrollbar { display: none; }
+
+.sub-tab {
+ flex: 1;
+ white-space: nowrap;
+ border: 0;
+ background: transparent;
+ color: var(--text-muted);
+ font-size: 12px;
+ font-weight: 700;
+ padding: 8px 12px;
+ border-radius: 11px;
+ cursor: pointer;
+ transition: all 0.2s ease;
+}
+
+.sub-tab.active {
+ background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+ color: #ffffff;
+ box-shadow: 0 4px 12px rgba(13, 148, 136, 0.25);
+}
+
+/* ZİHİN BAHÇESİ HERO BENTO */
+.garden-card {
+ display: flex;
+ align-items: center;
+ gap: 15px;
+ background: linear-gradient(135deg, var(--primary-light) 0%, var(--accent-light) 100%);
+ border: 1px solid rgba(13, 148, 136, 0.28);
+ border-radius: 18px;
+ padding: 15px;
+ margin-top: 6px;
+}
+
+.garden-visual {
+ width: 64px;
+ height: 64px;
+ border-radius: 18px;
+ background: var(--surface);
+ box-shadow: var(--shadow-sm);
+ display: grid;
+ place-items: center;
+ font-size: 34px;
+ flex-shrink: 0;
+}
+
+/* BENTO SUMMARY GRID */
+.summary-grid {
+ display: grid;
+ grid-template-columns: repeat(2, 1fr);
+ gap: 11px;
+ margin-top: 12px;
+}
+
+.summary-box {
+ background: var(--surface-soft);
+ border: 1px solid var(--border);
+ border-radius: 17px;
+ padding: 14px;
+ cursor: pointer;
+ transition: all 0.2s ease;
+}
+
+.summary-box:hover {
+ border-color: var(--primary);
+ transform: translateY(-2px);
+ box-shadow: var(--shadow-sm);
+}
+
+.summary-top {
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ font-size: 12px;
+ color: var(--text-muted);
+ font-weight: 600;
+}
+
+.summary-val {
+ font-size: 18.5px;
+ font-weight: 800;
+ color: var(--text);
+ margin: 6px 0 2px;
+ letter-spacing: -0.3px;
+}
+
+.summary-sub {
+ font-size: 11.5px;
+ color: var(--text-muted);
+}
+
+/* SVG CIRCULAR PROGRESS RINGS */
+.ring-wrapper {
+ position: relative;
+ width: 170px;
+ height: 170px;
+ margin: 10px auto;
+ display: grid;
+ place-items: center;
+}
+
+.ring-svg {
+ transform: rotate(-90deg);
+ width: 170px;
+ height: 170px;
+}
+
+.ring-bg {
+ fill: none;
+ stroke: var(--border);
+ stroke-width: 10;
+}
+
+.ring-fill {
+ fill: none;
+ stroke: url(#ringGrad);
+ stroke-width: 10;
+ stroke-linecap: round;
+ stroke-dasharray: 471;
+ stroke-dashoffset: 0;
+ transition: stroke-dashoffset 0.5s ease;
+}
+
+.ring-center {
+ position: absolute;
+ text-align: center;
+}
+
+.timer-display {
+ font-size: 36px;
+ font-weight: 800;
+ letter-spacing: 1px;
+ font-variant-numeric: tabular-nums;
+ color: var(--text);
+ line-height: 1.1;
+}
+
+/* LEVEL SELECTOR */
+.levels {
+ display: grid;
+ grid-template-columns: repeat(3, 1fr);
+ gap: 10px;
+ margin-bottom: 10px;
+}
+
+.level {
+ border: 1.5px solid var(--border);
+ border-radius: 16px;
+ padding: 14px 6px;
+ text-align: center;
+ background: var(--surface-soft);
+ color: var(--text);
+ cursor: pointer;
+ transition: all 0.2s ease;
+}
+
+.level:hover { border-color: var(--primary); }
+
+.level.active {
+ border-color: var(--primary);
+ background: var(--primary-light);
+ color: var(--primary-dark);
+ box-shadow: 0 6px 16px rgba(13, 148, 136, 0.16);
+}
+
+body.dark .level.active { color: #5eead4; }
+
+.level span {
+ display: block;
+ font-size: 23px;
+ margin-bottom: 5px;
+}
+
+.level strong { font-size: 13px; display: block; }
+.level small { font-size: 11px; color: var(--text-muted); }
+
+/* MOOD CHECK-IN & THERMOMETER */
+.mood-row {
+ display: grid;
+ grid-template-columns: repeat(5, 1fr);
+ gap: 8px;
+ margin-top: 10px;
+}
+
+.mood-btn {
+ border: 1.5px solid var(--border);
+ background: var(--surface-soft);
+ border-radius: 14px;
+ padding: 10px 4px;
+ text-align: center;
+ cursor: pointer;
+ color: var(--text);
+ transition: all 0.2s ease;
+}
+
+.mood-btn span {
+ display: block;
+ font-size: 22px;
+ margin-bottom: 3px;
+}
+
+.mood-btn small {
+ font-size: 11px;
+ font-weight: 700;
+ color: var(--text-muted);
+}
+
+.mood-btn.active {
+ border-color: var(--primary);
+ background: var(--primary-light);
+ transform: translateY(-2px);
+}
+
+.thermo-box {
+ margin-top: 12px;
+ padding: 12px 14px;
+ border-radius: 14px;
+ background: var(--surface-soft);
+ border: 1px solid var(--border);
+}
+
+.thermo-slider {
+ width: 100%;
+ accent-color: var(--primary);
+ margin: 8px 0 4px;
+ cursor: pointer;
+}
+
+.mood-feedback {
+ margin-top: 12px;
+ padding: 13px 15px;
+ border-radius: 14px;
+ background: var(--surface-soft);
+ border-left: 4px solid var(--primary);
+ font-size: 13px;
+ color: var(--text);
+}
+
+/* TOPICS GRID */
+.grid {
+ display: grid;
+ grid-template-columns: 1fr 1fr;
+ gap: 11px;
+}
+
+.topic {
+ background: var(--surface-soft);
+ border: 1px solid var(--border);
+ border-radius: 17px;
+ padding: 15px;
+ cursor: pointer;
+ color: var(--text);
+ text-align: left;
+ transition: all 0.2s ease;
+}
+
+.topic:hover {
+ border-color: var(--primary);
+ transform: translateY(-2px);
+ box-shadow: var(--shadow-sm);
+}
+
+.topic:active { transform: scale(0.98); }
+
+.topic-icon {
+ width: 40px;
+ height: 40px;
+ border-radius: 12px;
+ background: var(--primary-light);
+ display: grid;
+ place-items: center;
+ font-size: 20px;
+ margin-bottom: 10px;
+}
+
+.topic strong { font-size: 14px; display: block; }
+.topic small {
+ display: block;
+ color: var(--text-muted);
+ margin-top: 3px;
+ font-size: 12px;
+}
+
+/* BUTTONS */
+button { font-family: inherit; }
+
+.primary {
+ width: 100%;
+ padding: 13px 18px;
+ border: 0;
+ border-radius: 14px;
+ background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+ color: #ffffff;
+ font-weight: 700;
+ font-size: 14px;
+ cursor: pointer;
+ box-shadow: 0 4px 14px rgba(13, 148, 136, 0.25);
+ transition: transform 0.15s ease, opacity 0.2s ease;
+}
+
+.primary:hover:not(:disabled) { transform: translateY(-1px); }
+.primary:disabled { opacity: 0.45; cursor: not-allowed; box-shadow: none; }
+
+.secondary {
+ padding: 9px 14px;
+ border: 1px solid var(--border);
+ border-radius: 12px;
+ background: var(--surface-soft);
+ color: var(--text);
+ font-weight: 600;
+ font-size: 13px;
+ cursor: pointer;
+ transition: all 0.15s ease;
+}
+
+.secondary:hover { border-color: var(--primary); }
+.danger-btn { border-color: rgba(239, 68, 68, 0.35); color: #ef4444; }
+
+/* PAGES */
+.page { display: none; animation: fadeIn 0.24s ease; }
+.page.active { display: block; }
+
+@keyframes fadeIn {
+ from { opacity: 0; transform: translateY(6px); }
+ to { opacity: 1; transform: translateY(0); }
+}
+
+/* PROGRESS BAR */
+.progress {
+ height: 9px;
+ background: var(--border);
+ border-radius: 999px;
+ overflow: hidden;
+ margin: 10px 0 14px;
+}
+
+.progress-fill {
+ height: 100%;
+ width: 0;
+ background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+ border-radius: 999px;
+ transition: width 0.38s ease;
+}
+
+/* POMODORO MODES */
+.timer-card { text-align: center; }
+
+.timer-modes {
+ display: flex;
+ justify-content: center;
+ gap: 8px;
+ margin-bottom: 10px;
+}
+
+.mode-pill {
+ padding: 8px 15px;
+ border-radius: 999px;
+ border: 1.5px solid var(--border);
+ background: var(--surface-soft);
+ color: var(--text-muted);
+ font-size: 12.5px;
+ font-weight: 700;
+ cursor: pointer;
+}
+
+.mode-pill.active {
+ border-color: var(--primary);
+ background: var(--primary-light);
+ color: var(--primary-dark);
+}
+
+body.dark .mode-pill.active { color: #5eead4; }
+
+.timer-controls {
+ display: flex;
+ justify-content: center;
+ gap: 10px;
+ margin-top: 14px;
+}
+
+/* QUIZ & RIASEC */
+.quiz-header {
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ margin-bottom: 8px;
+}
+
+.question-option {
+ display: flex;
+ align-items: center;
+ gap: 10px;
+ width: 100%;
+ text-align: left;
+ padding: 13px 15px;
+ margin: 8px 0;
+ border: 1.5px solid var(--border);
+ border-radius: 14px;
+ background: var(--surface-soft);
+ color: var(--text);
+ font-size: 14px;
+ font-weight: 500;
+ cursor: pointer;
+ transition: all 0.18s ease;
+}
+
+.question-option:hover:not(:disabled) { border-color: var(--primary); }
+.question-option:disabled { cursor: default; }
+
+.question-option.correct {
+ background: var(--success-bg);
+ border-color: var(--success-border);
+ color: var(--success-text);
+ font-weight: 600;
+}
+
+.question-option.wrong {
+ background: var(--error-bg);
+ border-color: var(--error-border);
+ color: var(--error-text);
+}
+
+.guidance-note {
+ margin: 13px 0;
+ padding: 14px 16px;
+ border-radius: 14px;
+ background: var(--primary-light);
+ border-left: 4px solid var(--primary);
+ font-size: 13.5px;
+ line-height: 1.55;
+}
+
+/* VIA CHARACTER STRENGTHS CHIPS */
+.chip-grid {
+ display: flex;
+ flex-wrap: wrap;
+ gap: 8px;
+ margin: 12px 0;
+}
+
+.strength-chip {
+ padding: 8px 13px;
+ border-radius: 999px;
+ border: 1.5px solid var(--border);
+ background: var(--surface-soft);
+ color: var(--text);
+ font-size: 12.5px;
+ font-weight: 600;
+ cursor: pointer;
+ transition: all 0.18s ease;
+}
+
+.strength-chip.selected {
+ border-color: var(--accent);
+ background: var(--accent-light);
+ color: var(--accent);
+ font-weight: 700;
+}
+
+/* DECISION MATRIX (2x2 GRID) */
+.matrix-grid {
+ display: grid;
+ grid-template-columns: 1fr 1fr;
+ gap: 9px;
+ margin: 10px 0 12px;
+}
+
+.matrix-box {
+ background: var(--surface-soft);
+ border: 1px solid var(--border);
+ border-radius: 14px;
+ padding: 11px;
+}
+
+.matrix-box label {
+ display: block;
+ font-size: 11.5px;
+ font-weight: 700;
+ margin-bottom: 6px;
+}
+
+/* 5-4-3-2-1 GROUNDING */
+.grounding-step-box {
+ background: var(--surface-soft);
+ border: 1.5px solid var(--primary);
+ border-radius: 18px;
+ padding: 18px;
+ text-align: center;
+ margin-top: 12px;
+}
+
+.grounding-num {
+ width: 48px;
+ height: 48px;
+ border-radius: 16px;
+ background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+ color: #fff;
+ font-size: 20px;
+ font-weight: 800;
+ display: grid;
+ place-items: center;
+ margin: 0 auto 10px;
+}
+
+/* PEER GRATITUDE CARD PREVIEW */
+.gratitude-preview {
+ background: linear-gradient(135deg, var(--primary-light) 0%, var(--accent-light) 100%);
+ border: 1.5px dashed var(--primary);
+ border-radius: 16px;
+ padding: 16px;
+ margin: 12px 0;
+ text-align: center;
+}
+
+/* PSYCHOEDUCATION CARDS */
+.psycho-grid {
+ display: grid;
+ grid-template-columns: 1fr;
+ gap: 10px;
+}
+
+.psycho-item {
+ background: var(--surface-soft);
+ border: 1px solid var(--border);
+ border-radius: 14px;
+ padding: 14px 15px;
+}
+
+.psycho-item strong {
+ display: block;
+ font-size: 14px;
+ color: var(--primary);
+ margin-bottom: 4px;
+}
+
+/* BREATHING EXERCISE */
+.breath-box {
+ text-align: center;
+ padding: 10px 0 4px;
+}
+
+.breath-circle {
+ width: 110px;
+ height: 110px;
+ margin: 14px auto;
+ border-radius: 50%;
+ background: var(--primary-light);
+ border: 3px solid var(--primary);
+ display: grid;
+ place-items: center;
+ font-weight: 700;
+ font-size: 13.5px;
+ color: var(--primary-dark);
+ transition: transform 4s ease-in-out;
+}
+
+body.dark .breath-circle { color: #5eead4; }
+.breath-circle.inhale, .breath-circle.hold { transform: scale(1.24); }
+.breath-circle.exhale { transform: scale(0.95); }
+
+/* FORMS & LISTS */
+.goal-form {
+ display: flex;
+ gap: 8px;
+ margin-bottom: 12px;
+ flex-wrap: wrap;
+}
+
+.form-group { margin-bottom: 12px; }
+
+.form-label {
+ display: block;
+ font-size: 12.5px;
+ font-weight: 700;
+ margin-bottom: 6px;
+ color: var(--text);
+}
+
+.input-field {
+ width: 100%;
+ padding: 11px 13px;
+ border-radius: 12px;
+ border: 1.5px solid var(--border);
+ background: var(--surface-soft);
+ color: var(--text);
+ font-size: 14px;
+ font-family: inherit;
+ outline: none;
+ transition: border-color 0.2s ease;
+}
+
+.input-field:focus { border-color: var(--primary); }
+
+textarea.input-field {
+ resize: vertical;
+ min-height: 82px;
+}
+
+.checkbox-row {
+ display: flex;
+ align-items: center;
+ gap: 8px;
+ font-size: 13px;
+ color: var(--text-muted);
+ margin-bottom: 14px;
+ cursor: pointer;
+}
+
+.checkbox-row input {
+ width: 16px;
+ height: 16px;
+ accent-color: var(--primary);
+}
+
+.list-item {
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ gap: 10px;
+ padding: 12px 14px;
+ background: var(--surface-soft);
+ border: 1px solid var(--border);
+ border-radius: 14px;
+ margin-bottom: 8px;
+}
+
+.item-left {
+ display: flex;
+ align-items: center;
+ gap: 10px;
+ cursor: pointer;
+ flex: 1;
+}
+
+.item-left input[type="checkbox"] {
+ width: 18px;
+ height: 18px;
+ accent-color: var(--primary);
+ cursor: pointer;
+ flex-shrink: 0;
+}
+
+.list-item.done .item-text {
+ text-decoration: line-through;
+ color: var(--text-muted);
+}
+
+.badge-mini {
+ font-size: 10.5px;
+ font-weight: 700;
+ padding: 3px 9px;
+ border-radius: 999px;
+ background: var(--accent-light);
+ color: var(--accent);
+ white-space: nowrap;
+}
+
+.badge-mini.urgent {
+ background: var(--warn-bg);
+ color: var(--warn-text);
+}
+
+.del-btn {
+ background: none;
+ border: 0;
+ color: var(--text-muted);
+ cursor: pointer;
+ font-size: 15px;
+ padding: 4px 6px;
+}
+
+.request-card {
+ background: var(--surface-soft);
+ border: 1px solid var(--border);
+ border-radius: 14px;
+ padding: 14px;
+ margin-bottom: 9px;
+}
+
+.request-top {
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ margin-bottom: 6px;
+ gap: 6px;
+}
+
+.status-tag {
+ font-size: 11px;
+ font-weight: 700;
+ padding: 3px 9px;
+ border-radius: 999px;
+ background: var(--primary-light);
+ color: var(--primary-dark);
+}
+
+body.dark .status-tag { color: #5eead4; }
+
+.counselor-reply-box {
+ margin-top: 9px;
+ padding: 10px 12px;
+ border-radius: 10px;
+ background: var(--primary-light);
+ font-size: 12.5px;
+ border-left: 3px solid var(--primary);
+}
+
+/* WEEKLY MOOD CHART */
+.mood-chart-row {
+ display: grid;
+ grid-template-columns: repeat(7, 1fr);
+ gap: 6px;
+ text-align: center;
+ margin-top: 10px;
+}
+
+.mood-day-col {
+ background: var(--surface-soft);
+ border: 1px solid var(--border);
+ border-radius: 12px;
+ padding: 8px 4px;
+}
+
+.mood-day-col span {
+ font-size: 20px;
+ display: block;
+ margin-bottom: 4px;
+}
+
+.mood-day-col small {
+ font-size: 10.5px;
+ color: var(--text-muted);
+ font-weight: 600;
+}
+
+/* ACTIVITY DISTRIBUTION BAR */
+.dist-bar {
+ display: flex;
+ height: 12px;
+ border-radius: 999px;
+ overflow: hidden;
+ background: var(--border);
+ margin: 12px 0;
+}
+
+.dist-legend {
+ display: grid;
+ grid-template-columns: repeat(2, 1fr);
+ gap: 8px;
+ font-size: 12px;
+}
+
+/* STATS & BADGES */
+.stat-row {
+ display: grid;
+ grid-template-columns: repeat(3, 1fr);
+ gap: 10px;
+ margin-bottom: 16px;
+}
+
+.stat {
+ background: var(--surface);
+ border: 1px solid var(--border);
+ padding: 16px 10px;
+ border-radius: 18px;
+ text-align: center;
+ box-shadow: var(--shadow);
+}
+
+.stat strong {
+ display: block;
+ font-size: 22px;
+ font-weight: 800;
+ color: var(--primary);
+ margin-top: 4px;
+}
+
+.badge-grid {
+ display: grid;
+ grid-template-columns: 1fr 1fr;
+ gap: 10px;
+}
+
+.badge-box {
+ display: flex;
+ align-items: center;
+ gap: 10px;
+ background: var(--surface-soft);
+ border: 1px solid var(--border);
+ padding: 12px;
+ border-radius: 14px;
+}
+
+.badge-box.locked {
+ opacity: 0.45;
+ filter: grayscale(1);
+}
+
+.badge-icon { font-size: 24px; }
+.badge-box strong { font-size: 13px; display: block; }
+.badge-box small { font-size: 11px; color: var(--text-muted); }
+
+/* TOAST NOTIFICATION */
+.toast {
+ position: fixed;
+ bottom: 94px;
+ left: 50%;
+ transform: translateX(-50%) translateY(20px);
+ background: #0f172a;
+ color: #ffffff;
+ padding: 10px 18px;
+ border-radius: 999px;
+ font-size: 13px;
+ font-weight: 600;
+ box-shadow: 0 10px 28px rgba(0, 0, 0, 0.25);
+ opacity: 0;
+ pointer-events: none;
+ transition: all 0.28s ease;
+ z-index: 50;
+ display: flex;
+ align-items: center;
+ gap: 7px;
+ white-space: nowrap;
+}
+
+body.dark .toast {
+ background: #1e293b;
+ border: 1px solid var(--border);
+}
+
+.toast.show {
+ opacity: 1;
+ transform: translateX(-50%) translateY(0);
+}
+
+/* FLOATING GLASS BOTTOM NAVIGATION */
+nav {
+ position: fixed;
+ bottom: 12px;
+ left: 12px;
+ right: 12px;
+ max-width: 656px;
+ margin: 0 auto;
+ background: var(--glass);
+ backdrop-filter: blur(16px);
+ -webkit-backdrop-filter: blur(16px);
+ border: 1px solid var(--border);
+ border-radius: 22px;
+ display: flex;
+ justify-content: space-around;
+ padding: 7px 4px;
+ z-index: 20;
+ box-shadow: 0 12px 32px rgba(15, 23, 42, 0.16);
+}
+
+nav button {
+ border: 0;
+ background: none;
+ color: var(--text-muted);
+ font-size: 9.5px;
+ font-weight: 700;
+ cursor: pointer;
+ padding: 5px 4px;
+ border-radius: 13px;
+ transition: all 0.18s ease;
+ flex: 1;
+}
+
+nav button span {
+ display: block;
+ font-size: 16px;
+ margin-bottom: 2px;
+}
+
+nav button.active {
+ color: var(--primary);
+ background: var(--primary-light);
+}
+
+.hidden { display: none !important; }
+
+footer {
+ text-align: center;
+ color: var(--text-muted);
+ font-size: 11px;
+ letter-spacing: 0.7px;
+ padding: 16px 10px;
+}
+
+/* PRINT STYLES */
+@media print {
+ nav, .sticky-bar, .icon-btn, .goal-form, button, .toast, #confettiCanvas, .side-drawer, .drawer-backdrop { display: none !important; }
+ body { background: #fff !important; color: #000 !important; padding: 0; }
+ header { background: #1e3a5f !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+ .page { display: none !important; }
+ #progress { display: block !important; }
+ .card { box-shadow: none !important; border: 1px solid #ccc !important; }
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="confettiCanvas"></canvas>
+
+<!-- YAN MENÜ ARKA PLAN KARARTMASI -->
+<div class="drawer-backdrop" id="drawerBackdrop" onclick="closeMenu()"></div>
+
+<!-- AÇILIR KAPANIR YAN MENÜ (DRAWER) -->
+<aside class="side-drawer" id="sideDrawer" aria-label="Ana Menü">
+ <div class="drawer-head">
+  <div class="drawer-user-info">
+   <div style="display:flex; align-items:center; gap:8px;">
+    <div class="brand-logo">DD</div>
+    <span style="font-size:11px; font-weight:800; letter-spacing:0.8px; opacity:0.9;">DİJİTAL DÜNYAM</span>
+   </div>
+   <strong id="drawerUserName">Hoş Geldin, Öğrenci</strong>
+   <small id="drawerUserSub">Kademe seçilmedi • 0 Puan</small>
+  </div>
+  <button class="icon-btn" onclick="closeMenu()" title="Menüyü Kapat">✕</button>
+ </div>
+
+ <div class="drawer-body">
+  <div class="drawer-section-title">Ana Modüller</div>
+  <button class="drawer-item active" data-page="home" onclick="menuNavigate('home')">
+   <span class="d-ico">⌂</span>
+   <span class="d-meta">Ana Sayfa<small>Zihin bahçesi, duygu & günlük</small></span>
+  </button>
+  <button class="drawer-item" data-page="focus" onclick="menuNavigate('focus')">
+   <span class="d-ico">⏱️</span>
+   <span class="d-meta">Odak & Zaman<small>Pomodoro, denge & sınav sayacı</small></span>
+  </button>
+  <button class="drawer-item" data-page="games" onclick="menuNavigate('games')">
+   <span class="d-ico">🧠</span>
+   <span class="d-meta">Farkındalık Oyunları<small>6 kategoride senaryolar & nefes</small></span>
+  </button>
+  <button class="drawer-item" data-page="riasec" onclick="menuNavigate('riasec')">
+   <span class="d-ico">🧭</span>
+   <span class="d-meta">Keşif & Kariyer<small>RIASEC, VIA güçler & kapsül</small></span>
+  </button>
+  <button class="drawer-item" data-page="support" onclick="menuNavigate('support')">
+   <span class="d-ico">🛡️</span>
+   <span class="d-meta">Psikolojik Destek<small>BDT, Ben Dili & acil başa çıkma</small></span>
+  </button>
+  <button class="drawer-item" data-page="goals" onclick="menuNavigate('goals')">
+   <span class="d-ico">🎯</span>
+   <span class="d-meta">Hedeflerim<small>Günlük ve haftalık plan takibi</small></span>
+  </button>
+  <button class="drawer-item" data-page="counseling" onclick="menuNavigate('counseling')">
+   <span class="d-ico">💬</span>
+   <span class="d-meta">Rehberlik Servisi<small>Bülten, randevu & danışman modu</small></span>
+  </button>
+  <button class="drawer-item" data-page="progress" onclick="menuNavigate('progress')">
+   <span class="d-ico">★</span>
+   <span class="d-meta">Gelişimim & Karne<small>Rozetler, analiz & yedekleme</small></span>
+  </button>
+
+  <div class="drawer-section-title" style="margin-top:14px;">Hızlı Araç Kısayolları</div>
+  <div class="drawer-shortcuts">
+   <button class="shortcut-pill" onclick="jumpToSection('home', 'moodCard')">🌡️ Duygu Ölçer</button>
+   <button class="shortcut-pill" onclick="jumpToSub('riasec', 'subVia', 1)">💎 VIA Güçler</button>
+   <button class="shortcut-pill" onclick="jumpToSub('riasec', 'subCapsule', 2)">✉️ Zaman Kapsülü</button>
+   <button class="shortcut-pill" onclick="jumpToSub('support', 'subComm', 1)">💬 Ben Dili</button>
+   <button class="shortcut-pill" onclick="jumpToSub('support', 'subKit', 2)">🌿 5-4-3-2-1</button>
+   <button class="shortcut-pill" onclick="jumpToSection('games', 'breathBtn')">🌬️ Nefes Aç</button>
+  </div>
+ </div>
+
+ <div class="drawer-foot">
+  <button class="secondary" style="flex:1; font-size:12px;" onclick="toggleTheme(); updateDrawerInfo();">🌓 Tema</button>
+  <button class="secondary" style="flex:1; font-size:12px;" onclick="toggleSound()">🔊 Ses</button>
+  <button class="secondary" style="flex:1; font-size:12px;" onclick="closeMenu(); showPage('counseling'); toggleCounselorMode();">🔐 PDR</button>
+ </div>
+</aside>
+
+<!-- SVG GRADIENT DEFINITIONS -->
+<svg width="0" height="0" style="position:absolute;">
+ <defs>
+  <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+   <stop offset="0%" stop-color="#0d9488" />
+   <stop offset="100%" stop-color="#6366f1" />
+  </linearGradient>
+ </defs>
+</svg>
+
+<!-- STICKY GLASS APP BAR -->
+<div class="sticky-bar">
+ <div class="sticky-inner">
+  <div class="brand-wrap">
+   <button class="icon-btn" onclick="openMenu()" title="Menüyü Aç" aria-label="Menüyü Aç">☰</button>
+   <div class="brand-logo">DD</div>
+   <span>DİJİTAL DÜNYAM</span>
+  </div>
+  <div class="header-actions">
+   <span class="pill-badge" id="streakBadge">🔥 1 Gün</span>
+   <span class="pill-badge" id="headerLevelBadge">Kademe</span>
+   <span class="pill-badge">⭐ <span id="headerPoints">0</span> P</span>
+   <button class="icon-btn" onclick="toggleSound()" title="Ses Efektleri" id="soundBtn">🔊</button>
+   <button class="icon-btn" onclick="toggleTheme()" title="Tema Değiştir" id="themeBtn">🌙</button>
+  </div>
+ </div>
+</div>
+
+<header>
+ <div class="header-inner">
+  <h1 id="headerGreeting">Kendini keşfet.</h1>
+  <p class="date-subtitle" id="liveDateText">Psikolojik Rehberlik ve Öğrenci Gelişim Platformu</p>
+ </div>
+</header>
+
+<div class="container">
+
+<!-- 1. ANA SAYFA -->
+<section id="home" class="page active">
+
+ <!-- DİJİTAL ZİHİN BAHÇESİ & BENTO ÖZET -->
+ <div class="card">
+  <span class="section-tag">🌱 Zihin Bahçen & Günlük Özet</span>
+  <h2>Bugünkü gelişim ve sorumlulukların</h2>
+
+  <div class="garden-card">
+   <div class="garden-visual" id="gardenEmoji">🌱</div>
+   <div>
+    <strong style="font-size:15px; display:block;" id="gardenStageTitle">Tohum Aşaması (0 Puan)</strong>
+    <p class="muted" id="gardenStageDesc" style="font-size:12.5px; margin-top:2px;">Farkındalık oyunları, odaklanma ve günlük notlarla zihin bahçeni büyütebilirsin.</p>
+   </div>
+  </div>
+
+  <div class="summary-grid">
+   <div class="summary-box" onclick="document.getElementById('moodCard').scrollIntoView({behavior:'smooth'})">
+    <div class="summary-top"><span>Duygu Durumu</span><span>😊</span></div>
+    <div class="summary-val" id="sumMood">Belirlenmedi</div>
+    <div class="summary-sub" id="sumMoodSub">Şiddet: -/10</div>
+   </div>
+
+   <div class="summary-box" onclick="showPage('focus')">
+    <div class="summary-top"><span>Güne Hazırlık</span><span>🎒</span></div>
+    <div class="summary-val" id="sumChecklist">%0</div>
+    <div class="summary-sub" id="sumChecklistSub">0/0 madde hazır</div>
+   </div>
+
+   <div class="summary-box" onclick="showPage('focus')">
+    <div class="summary-top"><span>Odak Süresi</span><span>⏱️</span></div>
+    <div class="summary-val" id="sumFocus">0 dk</div>
+    <div class="summary-sub">Pomodoro çalışma</div>
+   </div>
+
+   <div class="summary-box" onclick="showPage('focus')">
+    <div class="summary-top"><span>Sıradaki Etkinlik</span><span>🎯</span></div>
+    <div class="summary-val" id="sumEvent">-</div>
+    <div class="summary-sub" id="sumEventSub">Planlanmış tarih yok</div>
+   </div>
+  </div>
+ </div>
+
+ <!-- KADEME SEÇİMİ -->
+ <div class="card">
+  <span class="section-tag">🎓 Eğitim Kademesi</span>
+  <h2>Sana uygun kademeyi seç</h2>
+  <p class="muted" style="margin-bottom:12px;">Oyun soruları ve rehberlik önerileri seçtiğin kademeye göre uyarlanır.</p>
+  <div class="levels">
+   <button class="level" data-level="İlkokul" onclick="setLevel('İlkokul')">
+    <span>📘</span>
+    <strong>İlkokul</strong>
+    <small>1 - 4. Sınıf</small>
+   </button>
+   <button class="level" data-level="Ortaokul" onclick="setLevel('Ortaokul')">
+    <span>📚</span>
+    <strong>Ortaokul</strong>
+    <small>5 - 8. Sınıf</small>
+   </button>
+   <button class="level" data-level="Lise" onclick="setLevel('Lise')">
+    <span>🎓</span>
+    <strong>Lise</strong>
+    <small>9 - 12. Sınıf</small>
+   </button>
+  </div>
+  <p id="levelText" class="muted">Devam etmek için yukarıdan kademeni seçebilirsin.</p>
+ </div>
+
+ <!-- DUYGU TERMOMETRESİ & ŞÜKRAN GÜNLÜĞÜ -->
+ <div class="card" id="moodCard">
+  <span class="section-tag">🌡️ Duygu Termometresi & Günlük</span>
+  <h2>Bugün nasıl hissediyorsun?</h2>
+  <div class="mood-row">
+   <button class="mood-btn" data-mood="Mutlu" onclick="selectMood('Mutlu', this)"><span>😊</span><small>Mutlu</small></button>
+   <button class="mood-btn" data-mood="Sakin" onclick="selectMood('Sakin', this)"><span>😌</span><small>Sakin</small></button>
+   <button class="mood-btn" data-mood="Yorgun" onclick="selectMood('Yorgun', this)"><span>😴</span><small>Yorgun</small></button>
+   <button class="mood-btn" data-mood="Kaygılı" onclick="selectMood('Kaygılı', this)"><span>😟</span><small>Kaygılı</small></button>
+   <button class="mood-btn" data-mood="Kızgın" onclick="selectMood('Kızgın', this)"><span>😠</span><small>Kızgın</small></button>
+  </div>
+
+  <div class="thermo-box">
+   <div style="display:flex; justify-content:space-between; align-items:center; font-size:12.5px; font-weight:700;">
+    <span>Duygu Yoğunluğu (1 - 10):</span>
+    <span style="color:var(--primary);" id="thermoValText">5 / 10</span>
+   </div>
+   <input type="range" min="1" max="10" value="5" class="thermo-slider" id="thermoSlider" oninput="updateThermometer(this.value)">
+   <small class="muted" id="thermoAdviceText">Orta düzeyde farkındalık. Duygunu gözlemlemek kontrol sağlar.</small>
+  </div>
+
+  <div id="moodFeedback" class="mood-feedback hidden"></div>
+
+  <div style="margin-top:14px; padding-top:14px; border-top:1px solid var(--border);">
+   <label class="form-label" for="journalInput">Bugün iyi giden bir şey veya duygu notun (+5 Puan):</label>
+   <div class="goal-form" style="margin-bottom:8px;">
+    <input type="text" id="journalInput" class="input-field" style="flex:1;" placeholder="Örn: Bugün arkadaşımla güzel vakit geçirdim..." maxlength="100">
+    <button class="primary" style="width:auto; padding:0 16px;" onclick="addJournalEntry()">Kaydet</button>
+   </div>
+   <div id="journalList"></div>
+  </div>
+ </div>
+
+ <!-- HIZLI ERİŞİM -->
+ <div class="card">
+  <span class="section-tag">🚀 Keşfet & Planla</span>
+  <h2>Gelişim ve destek modülleri</h2>
+  <div class="grid">
+   <button class="topic" onclick="showPage('games')">
+    <div class="topic-icon">🧠</div>
+    <strong>Farkındalık oyunları</strong>
+    <small>6 kategoride senaryolar</small>
+   </button>
+   <button class="topic" onclick="showPage('riasec')">
+    <div class="topic-icon">🧭</div>
+    <strong>Keşif & Zaman Kapsülü</strong>
+    <small>RIASEC, VIA & Mektup</small>
+   </button>
+   <button class="topic" onclick="showPage('support')">
+    <div class="topic-icon">🛡️</div>
+    <strong>BDT, Ben Dili & Terazi</strong>
+    <small>İletişim & başa çıkma kiti</small>
+   </button>
+   <button class="topic" onclick="showPage('counseling')">
+    <div class="topic-icon">💬</div>
+    <strong>Rehberlik & Bülten</strong>
+    <small>Psikoeğitim & danışmanlık</small>
+   </button>
+  </div>
+ </div>
+
+ <!-- GÜNÜN İLHAMI -->
+ <div class="card">
+  <span class="section-tag">💡 Günün İlhamı</span>
+  <p id="dailyMessage" style="font-weight:600; margin:0 0 12px;">
+   "Kendine inan. Gelişim küçük adımlarla başlar."
+  </p>
+  <button class="secondary" onclick="newMessage()">↻ Yeni mesaj göster</button>
+ </div>
+</section>
+
+<!-- 2. ODAK, YAŞAM DENGESİ, UYKU VE SINAV TAKVİMİ -->
+<section id="focus" class="page">
+
+ <!-- POMODORO SVG RING TIMER -->
+ <div class="card timer-card">
+  <span class="section-tag">⏱️ Bilinçli Çalışma Sayacı</span>
+  <h2>Pomodoro & Zihinsel Mola</h2>
+  <p class="muted" style="margin-bottom:12px;">25 dakika odaklanarak çalış, ardından 5 dakika zihnini dinlendir (<strong>+15 puan</strong>).</p>
+
+  <div class="timer-modes">
+   <button class="mode-pill active" id="modeFocusBtn" onclick="setTimerMode('focus')">Odaklanma (25 dk)</button>
+   <button class="mode-pill" id="modeBreakBtn" onclick="setTimerMode('break')">Zihinsel Mola (5 dk)</button>
+  </div>
+
+  <div class="ring-wrapper">
+   <svg class="ring-svg" viewBox="0 0 170 170">
+    <circle class="ring-bg" cx="85" cy="85" r="75"></circle>
+    <circle class="ring-fill" id="timerRingFill" cx="85" cy="85" r="75"></circle>
+   </svg>
+   <div class="ring-center">
+    <div class="timer-display" id="timerDisplay">25:00</div>
+    <small class="muted" id="timerRingLabel">ODAK MODU</small>
+   </div>
+  </div>
+
+  <p class="muted" id="timerStatus">Bugün toplam <strong id="focusMinutesText">0</strong> dk odaklandın</p>
+
+  <div class="timer-controls">
+   <button class="primary" style="width:auto; padding:12px 26px;" id="timerStartBtn" onclick="toggleTimer()">Başlat</button>
+   <button class="secondary" onclick="resetTimer()">Sıfırla</button>
+  </div>
+
+  <div id="breakTipBox" class="guidance-note hidden" style="text-align:left; margin-top:14px;">
+   <strong>🌿 Mola Önerisi:</strong> Ekrandan gözlerini ayır, bir bardak su iç ve omuzlarını gevşeterek 3 kez derin nefes al.
+  </div>
+ </div>
+
+ <!-- GÜNLÜK YAŞAM & ZAMAN DENGESİ PLANLAYICI -->
+ <div class="card">
+  <span class="section-tag">⚖️ Zaman & Yaşam Dengesi</span>
+  <h2>24 Saatlik Günlük Denge Planlayıcı</h2>
+  <p class="muted" style="margin-bottom:12px;">Günlük saatlerini 4 temel yaşam alanına göre dengele ve dağılımını gör.</p>
+
+  <div class="matrix-grid">
+   <div class="matrix-box">
+    <label>📚 Ders & Odak (Saat)</label>
+    <input type="number" id="balStudy" class="input-field" value="6" min="0" max="16" oninput="updateLifeBalance()">
+   </div>
+   <div class="matrix-box">
+    <label>😴 Uyku & Dinlenme (Saat)</label>
+    <input type="number" id="balSleep" class="input-field" value="8" min="0" max="16" oninput="updateLifeBalance()">
+   </div>
+   <div class="matrix-box">
+    <label>🎨 Sosyal & Hobi (Saat)</label>
+    <input type="number" id="balHobby" class="input-field" value="3" min="0" max="16" oninput="updateLifeBalance()">
+   </div>
+   <div class="matrix-box">
+    <label>📱 Ekran & Sosyal Medya</label>
+    <input type="number" id="balScreen" class="input-field" value="2" min="0" max="16" oninput="updateLifeBalance()">
+   </div>
+  </div>
+
+  <div class="dist-bar" id="lifeBalanceBar"></div>
+  <p class="muted" id="lifeBalanceFeedback" style="font-weight:600;"></p>
+ </div>
+
+ <!-- AKILLI GÜNE HAZIRLIK LİSTESİ -->
+ <div class="card">
+  <span class="section-tag">🎒 Akıllı Kontrol Listesi</span>
+  <h2>Güne ve Okula Hazırlık Listesi</h2>
+  <p class="muted">Liste <strong>%100</strong> olduğunda <strong>+10 puan</strong> kazanırsın.</p>
+
+  <div class="progress"><div class="progress-fill" id="checklistProgress"></div></div>
+  <p class="muted" id="checklistStats" style="margin-bottom:12px; font-weight:600;">0 / 0 madde tamamlandı (%0)</p>
+
+  <div class="goal-form">
+   <input type="text" id="checkInput" class="input-field" style="flex:1;" placeholder="Yeni hazırlık maddesi ekle..." maxlength="60">
+   <button class="primary" style="width:auto; padding:0 16px;" onclick="addChecklistItem()">Ekle</button>
+  </div>
+
+  <div id="checklistContainer"></div>
+ </div>
+
+ <!-- AKŞAM KAPANIŞI & ZİHİN BOŞALTMA KUTUSU -->
+ <div class="card">
+  <span class="section-tag">🌙 Akşam Kapanışı & Uyku Hijyeni</span>
+  <h2>Zihin Boşaltma Kutusu</h2>
+  <p class="muted" style="margin-bottom:12px;">Yatmadan önce aklına takılan yarınki işleri buraya yazıp sabaha kadar kilitle (<strong>+5 Puan</strong>).</p>
+
+  <div class="goal-form">
+   <input type="text" id="nightWorryInput" class="input-field" style="flex:1;" placeholder="Örn: Yarınki sunumumu sabah tekrar edeceğim..." maxlength="110">
+   <button class="primary" style="width:auto; padding:0 16px;" onclick="lockNightWorry()">🔒 Kutuya Kilitle</button>
+  </div>
+
+  <div id="nightWorryStatus" class="guidance-note hidden"></div>
+ </div>
+
+ <!-- SINAV VE ÖNEMLİ GÜN GERİ SAYIMI -->
+ <div class="card">
+  <span class="section-tag">📅 Takvim & Kaygı Desteği</span>
+  <h2>Sınav & Önemli Gün Geri Sayımı</h2>
+  <div class="goal-form">
+   <input type="text" id="eventTitleInput" class="input-field" style="flex:2; min-width:150px;" placeholder="Örn: Matematik Yazılısı" maxlength="50">
+   <input type="date" id="eventDateInput" class="input-field" style="flex:1; min-width:130px;">
+   <button class="primary" style="width:auto; padding:0 16px;" onclick="addEventItem()">Ekle</button>
+  </div>
+  <div id="eventListContainer"></div>
+ </div>
+</section>
+
+<!-- 3. OYUNLAR -->
+<section id="games" class="page">
+ <div class="card">
+  <span class="section-tag">🎮 Öğren ve Keşfet</span>
+  <h2>Eğitici farkındalık oyunları</h2>
+  <p class="muted" id="gameLevelInfo">Seçili kademeye göre senaryoları çöz. Her doğru cevap <strong>10 puan</strong> kazandırır.</p>
+ </div>
+
+ <div class="card">
+  <h2>Kategori seç</h2>
+  <div class="grid">
+   <button class="topic" onclick="startGame('empati')">
+    <div class="topic-icon">🤝</div>
+    <strong>Empati</strong>
+    <small>Başkalarını anlama</small>
+   </button>
+   <button class="topic" onclick="startGame('zorbalik')">
+    <div class="topic-icon">🛡️</div>
+    <strong>Akran zorbalığı</strong>
+    <small>Güvenli davranışlar</small>
+   </button>
+   <button class="topic" onclick="startGame('kaygi')">
+    <div class="topic-icon">🌿</div>
+    <strong>Kaygı yönetimi</strong>
+    <small>Sakinleşme yolları</small>
+   </button>
+   <button class="topic" onclick="startGame('ozguven')">
+    <div class="topic-icon">⭐</div>
+    <strong>Özgüven</strong>
+    <small>Kendini tanıma</small>
+   </button>
+   <button class="topic" onclick="startGame('kariyer')">
+    <div class="topic-icon">🧭</div>
+    <strong>Kariyer & İlgi</strong>
+    <small>Gelecek planlama</small>
+   </button>
+   <button class="topic" onclick="startGame('dijital')">
+    <div class="topic-icon">📱</div>
+    <strong>Dijital denge</strong>
+    <small>Bilinçli teknoloji kullanımı</small>
+   </button>
+  </div>
+ </div>
+
+ <!-- AKTİF QUIZ ALANI -->
+ <div class="card hidden" id="quiz">
+  <div class="quiz-header">
+   <span class="section-tag" id="gameName" style="margin:0;">OYUN</span>
+   <span class="muted" id="questionNumber" style="font-weight:600;"></span>
+  </div>
+  <div class="progress"><div class="progress-fill" id="questionProgress"></div></div>
+  <h3 id="question"></h3>
+  <div id="options"></div>
+  <div id="feedbackBox" class="guidance-note hidden"></div>
+  <button class="primary" id="nextButton" onclick="handleNextAction()" disabled>
+   Sonraki soru
+  </button>
+ </div>
+
+ <!-- NEFES EGZERSİZİ ARACI -->
+ <div class="card">
+  <span class="section-tag">🌬️ Rahatlama Aracı</span>
+  <h2>4-4-4 Nefes Egzersizi</h2>
+  <div class="breath-box">
+   <div class="breath-circle" id="breathCircle">Hazır</div>
+   <button class="secondary" id="breathBtn" onclick="toggleBreathing()">Egzersizi Başlat</button>
+  </div>
+ </div>
+</section>
+
+<!-- 4. KEŞİF: RIASEC, VIA GÜÇLER & ZAMAN KAPSÜLÜ -->
+<section id="riasec" class="page">
+
+ <div class="sub-nav">
+  <button class="sub-tab active" onclick="switchSubTab('riasec', 'subRiasec', this)">🧭 İlgi Envanteri</button>
+  <button class="sub-tab" onclick="switchSubTab('riasec', 'subVia', this)">💎 Karakter Güçleri</button>
+  <button class="sub-tab" onclick="switchSubTab('riasec', 'subCapsule', this)">✉️ Zaman Kapsülü</button>
+ </div>
+
+ <!-- ALT SEKME 1: RIASEC -->
+ <div id="subRiasec" class="sub-panel">
+  <div class="card">
+   <span class="section-tag">🧭 Mesleki İlgi & Yetenek Envanteri</span>
+   <h2>Kişilik ve İlgi Profilini Keşfet</h2>
+   <p class="muted">12 kısa soruyu yanıtla; baskın ilgi alanlarını ve sana uygun meslek önerilerini gör.</p>
+  </div>
+
+  <div class="card" id="riasecQuizCard">
+   <div class="quiz-header">
+    <span class="section-tag" style="margin:0;">ENVANTER SORUSU</span>
+    <span class="muted" id="riasecStepText" style="font-weight:600;">1 / 12</span>
+   </div>
+   <div class="progress"><div class="progress-fill" id="riasecProgress"></div></div>
+   <h3 id="riasecQuestion"></h3>
+   <div style="display:grid; gap:8px; margin-top:12px;">
+    <button class="question-option" onclick="answerRiasec(2)"><span>😄</span> <strong>Bana Çok Uygun</strong></button>
+    <button class="question-option" onclick="answerRiasec(1)"><span>🙂</span> <strong>Kısmen Uygun</strong></button>
+    <button class="question-option" onclick="answerRiasec(0)"><span>😐</span> <strong>Bana Uygun Değil</strong></button>
+   </div>
+  </div>
+
+  <div class="card hidden" id="riasecResultCard">
+   <span class="section-tag">✨ Keşif Sonucun</span>
+   <h2 id="riasecTopTitle">Baskın Profilin</h2>
+   <div id="riasecResultContent" class="guidance-note"></div>
+   <button class="secondary" onclick="restartRiasec()">↻ Envanteri Yeniden Çöz</button>
+  </div>
+ </div>
+
+ <!-- ALT SEKME 2: VIA KARAKTER GÜÇLERİ -->
+ <div id="subVia" class="sub-panel hidden">
+  <div class="card">
+   <span class="section-tag">💎 Değerler Pusulası (VIA)</span>
+   <h2>En Güçlü 5 Karakter Özelliğini Seç</h2>
+   <p class="muted">12 karakter gücünden seni en iyi tanımlayan <strong>5 tanesini</strong> seç; kişisel Karakter Kimlik Kartını oluştur (<strong>+15 Puan</strong>).</p>
+
+   <div class="chip-grid" id="strengthChipsContainer"></div>
+   <p class="muted" id="strengthCountText" style="font-weight:700; margin-bottom:10px;">Seçilen: 0 / 5</p>
+   <button class="primary" id="saveStrengthsBtn" onclick="generateCharacterCard()" disabled>Karakter Kimlik Kartımı Oluştur</button>
+
+   <div id="characterCardResult" class="guidance-note hidden" style="margin-top:12px;"></div>
+  </div>
+ </div>
+
+ <!-- ALT SEKME 3: ZAMAN KAPSÜLÜ -->
+ <div id="subCapsule" class="sub-panel hidden">
+  <div class="card">
+   <span class="section-tag">✉️ Gelecekteki Kendime Mektup</span>
+   <h2>Zaman Kapsülü Oluştur</h2>
+   <p class="muted" style="margin-bottom:12px;">Dönem sonu veya sınav sonrası için kendine bir motivasyon mektubu yaz ve açılış tarihini belirle (<strong>+10 Puan</strong>).</p>
+
+   <div class="form-group">
+    <label class="form-label" for="capsuleDateInput">Mektup Ne Zaman Açılsın?</label>
+    <input type="date" id="capsuleDateInput" class="input-field">
+   </div>
+   <div class="form-group">
+    <label class="form-label" for="capsuleTextInput">Gelecekteki Kendine Mesajın:</label>
+    <textarea id="capsuleTextInput" class="input-field" placeholder="Sevgili gelecekteki ben, bugünlerde çok çabalıyorum ve..." maxlength="350"></textarea>
+   </div>
+   <button class="primary" onclick="saveTimeCapsule()">🔒 Mektubu Mühürle</button>
+
+   <div id="capsuleListContainer" style="margin-top:14px;"></div>
+  </div>
+ </div>
+</section>
+
+<!-- 5. DESTEK: BDT, BEN DİLİ SİMÜLATÖRÜ, TERAZİ & BAŞA ÇIKMA -->
+<section id="support" class="page">
+
+ <div class="sub-nav">
+  <button class="sub-tab active" onclick="switchSubTab('support', 'subCbt', this)">🧠 BDT & Terazi</button>
+  <button class="sub-tab" onclick="switchSubTab('support', 'subComm', this)">💬 Ben Dili</button>
+  <button class="sub-tab" onclick="switchSubTab('support', 'subKit', this)">🎒 Acil Kit & Kart</button>
+ </div>
+
+ <!-- ALT SEKME 1: BDT & KARAR TERAZİSİ -->
+ <div id="subCbt" class="sub-panel">
+  <div class="card">
+   <span class="section-tag">🧠 BDT Düşünce Dönüştürücü</span>
+   <h2>Otomatik Düşünceni Yeniden Çerçevele</h2>
+   <p class="muted" style="margin-bottom:12px;">Kaygılandığında aklından geçen katı düşünceyi yakala, kanıtlarını sorgula ve yerine daha dengeli bir düşünce koy (<strong>+10 Puan</strong>).</p>
+
+   <div class="form-group">
+    <label class="form-label" for="cbtNegInput">1. Aklımdan geçen olumsuz düşünce:</label>
+    <input type="text" id="cbtNegInput" class="input-field" placeholder="Örn: Bu sınavdan kesin başarısız olacağım..." maxlength="120">
+   </div>
+   <div class="form-group">
+    <label class="form-label" for="cbtEvidInput">2. Bu düşüncenin tersini gösteren gerçek bir kanıt ne?</label>
+    <input type="text" id="cbtEvidInput" class="input-field" placeholder="Örn: Daha önce çalıştığım konulardan iyi not almıştım." maxlength="120">
+   </div>
+   <div class="form-group">
+    <label class="form-label" for="cbtPosInput">3. Yeni ve dengeli düşüncem:</label>
+    <input type="text" id="cbtPosInput" class="input-field" placeholder="Örn: Elimden geleni yaparsam bildiklerimi yapabilirim." maxlength="120">
+   </div>
+   <button class="primary" onclick="saveCbtThought()">Düşünceyi Dönüştür & Kaydet</button>
+   <div id="cbtHistoryList" style="margin-top:12px;"></div>
+  </div>
+
+  <div class="card">
+   <span class="section-tag">⚖️ BDT Karar Matrisi</span>
+   <h2>Zor Kararlarda Artı-Eksi Terazisi</h2>
+   <input type="text" id="decTopicInput" class="input-field" style="margin-bottom:8px;" placeholder="Karar Konusu (Örn: Okul basketbol takımına katılmak)" maxlength="80">
+   <div class="matrix-grid">
+    <div class="matrix-box">
+     <label style="color:var(--primary);">✅ Yaparsam Kazançlarım</label>
+     <textarea id="decProDo" class="input-field" style="min-height:64px; font-size:12.5px;" placeholder="Yeni arkadaşlar, spor..."></textarea>
+    </div>
+    <div class="matrix-box">
+     <label style="color:#ef4444;">⚠️ Yaparsam Zorlukları</label>
+     <textarea id="decConDo" class="input-field" style="min-height:64px; font-size:12.5px;" placeholder="Zaman planlaması..."></textarea>
+    </div>
+    <div class="matrix-box">
+     <label style="color:var(--accent);">🛡️ Yapmazsam Kazançlarım</label>
+     <textarea id="decProDont" class="input-field" style="min-height:64px; font-size:12.5px;" placeholder="Daha fazla boş vakit..."></textarea>
+    </div>
+    <div class="matrix-box">
+     <label style="color:var(--warn-text);">⏳ Yapmazsam Kayıplarım</label>
+     <textarea id="decConDont" class="input-field" style="min-height:64px; font-size:12.5px;" placeholder="Deneyimi kaçırmak..."></textarea>
+    </div>
+   </div>
+   <button class="secondary" style="width:100%;" onclick="evaluateDecision()">⚖️ Karar Terazisini Değerlendir</button>
+   <div id="decisionResultBox" class="guidance-note hidden"></div>
+  </div>
+ </div>
+
+ <!-- ALT SEKME 2: BEN DİLİ & SINIR KOYMA SİMÜLATÖRÜ -->
+ <div id="subComm" class="sub-panel hidden">
+  <div class="card">
+   <span class="section-tag">💬 İletişim & Sınır Koyma</span>
+   <h2>"Ben Dili" Cümle Oluşturucu</h2>
+   <p class="muted" style="margin-bottom:12px;">Suçlamadan ("Sen dili" kullanmadan) kendi duygunu ve ihtiyacını net biçimde ifade etmeyi pratik yap (<strong>+10 Puan</strong>).</p>
+
+   <div class="form-group">
+    <label class="form-label" for="iBehaviorInput">1. Seni rahatsız eden davranış nedir?</label>
+    <input type="text" id="iBehaviorInput" class="input-field" placeholder="Örn: Ders çalışırken izinsiz kalemim alındığında..." maxlength="90">
+   </div>
+   <div class="form-group">
+    <label class="form-label" for="iEmotionInput">2. Bu durum sana ne hissettiriyor?</label>
+    <input type="text" id="iEmotionInput" class="input-field" placeholder="Örn: dikkatim dağılıyor ve üzülüyorum" maxlength="70">
+   </div>
+   <div class="form-group">
+    <label class="form-label" for="iNeedInput">3. Beklentin / Sınırın nedir?</label>
+    <input type="text" id="iNeedInput" class="input-field" placeholder="Örn: kullanmadan önce bana sormanı istiyorum." maxlength="90">
+   </div>
+   <button class="primary" onclick="buildIMessage()">✨ Yapıcı Ben Dili Cümlesi Oluştur</button>
+   <div id="iMessageResult" class="guidance-note hidden"></div>
+  </div>
+ </div>
+
+ <!-- ALT SEKME 3: ACİL KİT, 5-4-3-2-1, TEŞEKKÜR KARTI & GÜVENLİ ÇEMBER -->
+ <div id="subKit" class="sub-panel hidden">
+  <div class="card">
+   <span class="section-tag">🎒 Acil Durum Kiti</span>
+   <h2>Kişisel Başa Çıkma Çantam</h2>
+   <div class="goal-form">
+    <input type="text" id="copingInput" class="input-field" style="flex:1;" placeholder="Örn: Sevdiğim şarkıyı dinlemek..." maxlength="70">
+    <button class="secondary" onclick="addCopingItem()">+ Ekle</button>
+   </div>
+   <div id="copingTagsList" class="chip-grid" style="margin-bottom:12px;"></div>
+   <button class="primary" onclick="pickRandomCoping()">✨ Bana İyi Gelen Bir Şey Öner</button>
+   <div id="copingSuggestionBox" class="guidance-note hidden"></div>
+  </div>
+
+  <div class="card">
+   <span class="section-tag">🌿 Anlık Sakinleşme</span>
+   <h2>5-4-3-2-1 Topraklanma Tekniği</h2>
+   <div class="grounding-step-box">
+    <div class="grounding-num" id="groundNum">5</div>
+    <h3 id="groundTitle">Etrafında görebildiğin 5 şeyi fark et</h3>
+    <p class="muted" id="groundDesc" style="margin-bottom:14px;">Odanın içindeki nesnelere, renklere veya ışığa dikkatlice bak ve içinden say.</p>
+    <button class="primary" style="width:auto; padding:11px 22px;" id="groundBtn" onclick="nextGroundingStep()">Sonraki Adım →</button>
+   </div>
+  </div>
+
+  <div class="card">
+   <span class="section-tag">💌 Akran Desteği</span>
+   <h2>Arkadaşına Teşekkür Kartı Oluştur</h2>
+   <div class="goal-form">
+    <input type="text" id="cardToInput" class="input-field" style="flex:1;" placeholder="Kime? (Örn: Zeynep)" maxlength="35" oninput="updateCardPreview()">
+    <select id="cardTemplateSelect" class="input-field" style="flex:2;" onchange="updateCardPreview()">
+     <option value="Bugün yanımda olduğun ve beni dinlediğin için çok teşekkür ederim. İyi ki varsın! 🌟">🤝 Yanımda olduğun için teşekkürler</option>
+     <option value="Zorlandığım bir anda bana moral verdiğin için minnettarım. Birlikte her şeyi başarabiliriz! 💪">✨ Moral verdiğin için teşekkürler</option>
+     <option value="Nazik davranışın ve güleryüzünle günümü güzelleştirdin. Harika bir arkadaşsın! 😊">🌻 Günümü güzelleştirdin</option>
+     <option value="Emeklerin, sabrın ve rehberliğiniz için çok teşekkür ederim hocam. 🎓">📘 Öğretmenime teşekkür mesajı</option>
+    </select>
+   </div>
+   <div class="gratitude-preview">
+    <strong style="font-size:15px; display:block; margin-bottom:5px;" id="cardPreviewTitle">Sevgili Arkadaşım,</strong>
+    <p style="margin:0; font-size:13.5px;" id="cardPreviewBody">Bugün yanımda olduğun ve beni dinlediğin için çok teşekkür ederim. İyi ki varsın! 🌟</p>
+   </div>
+   <button class="primary" onclick="copyGratitudeCard()">📋 Kart Mesajını Kopyala & Paylaş</button>
+  </div>
+
+  <div class="card">
+   <span class="section-tag">🛡️ Güvenli Çemberim</span>
+   <h2>Zorlandığımda Başvurabileceğim Kişiler</h2>
+   <div class="goal-form">
+    <input type="text" id="circleNameInput" class="input-field" style="flex:2; min-width:140px;" placeholder="Ad / Unvan" maxlength="40">
+    <input type="text" id="circleNoteInput" class="input-field" style="flex:2; min-width:140px;" placeholder="İletişim / Oda No" maxlength="40">
+    <button class="primary" style="width:auto; padding:0 16px;" onclick="addSafePerson()">Ekle</button>
+   </div>
+   <div id="safeCircleList"></div>
+  </div>
+ </div>
+</section>
+
+<!-- 6. HEDEFLERİM -->
+<section id="goals" class="page">
+ <div class="card">
+  <span class="section-tag">🎯 Kişisel Planlama</span>
+  <h2>Günlük & Haftalık Hedeflerim</h2>
+  <p class="muted" style="margin-bottom:12px;">Tamamlanan her hedef <strong>+5 puan</strong> kazandırır.</p>
+
+  <div class="progress"><div class="progress-fill" id="goalProgress"></div></div>
+  <p class="muted" id="goalProgressText" style="margin-bottom:14px; font-weight:600;">0 / 0 hedef tamamlandı</p>
+
+  <div class="goal-form">
+   <select id="goalTypeSelect" class="input-field" style="width:auto; flex:1; min-width:115px;">
+    <option value="Günlük">📅 Bugün</option>
+    <option value="Haftalık">📆 Bu Hafta</option>
+   </select>
+   <input type="text" id="goalInput" class="input-field" style="flex:3; min-width:165px;" placeholder="Örn: 20 sayfa kitap okuyacağım..." maxlength="80">
+   <button class="primary" style="width:auto; padding:0 18px;" onclick="addGoal()">Ekle</button>
+  </div>
+
+  <div id="goalList"></div>
+ </div>
+</section>
+
+<!-- 7. REHBERLİK SERVİSİ, PSİKOEĞİTİM BÜLTENİ & DANIŞMAN PANELİ -->
+<section id="counseling" class="page">
+
+ <!-- REHBERLİK BÜLTENİ & DUYURU -->
+ <div class="card">
+  <span class="section-tag">📰 Rehberlik Bülteni</span>
+  <h2>Haftanın Psikoeğitim Kartları</h2>
+  <div id="counselorPinNotice" class="guidance-note">
+   <strong>📌 Okul Rehberlik Servisi Duyurusu:</strong> <span id="pinnedNoticeText">Sınav dönemlerinde uyku düzenini korumak ve günde 25 dakikalık odak bloklarıyla çalışmak kaygıyı önemli ölçüde azaltır.</span>
+  </div>
+
+  <div class="psycho-grid">
+   <div class="psycho-item">
+    <strong>💬 Sağlıklı İletişimde "Ben Dili"</strong>
+    <p class="muted" style="font-size:12.5px;">"Sen hep böyle yapıyorsun" yerine "Bu davranış beni üzdü" demek savunmayı azaltır ve empatiyi güçlendirir.</p>
+   </div>
+   <div class="psycho-item">
+    <strong>⏳ Erteleme Döngüsünü Kırmak (5 Dakika Kuralı)</strong>
+    <p class="muted" style="font-size:12.5px;">Bir derse başlamakta zorlandığında kendine sadece "5 dakika bakacağım" de. Başlamak zihinsel direnci kırar.</p>
+   </div>
+   <div class="psycho-item">
+    <strong>🛑 Hayır Diyebilmek ve Kişisel Sınırlar</strong>
+    <p class="muted" style="font-size:12.5px;">İstemediğin bir şeye saygılı ve net biçimde "Hayır" demek bencillik değil, özsaygı göstergesidir.</p>
+   </div>
+  </div>
+ </div>
+
+ <!-- DANIŞMANLIK FORMU & YÖNETİM PANELİ -->
+ <div class="card">
+  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
+   <div>
+    <span class="section-tag">💬 Okul Psikolojik Danışma</span>
+    <h2 style="margin:0;" id="counselMainTitle">Rehberlik Servisine Ulaş</h2>
+   </div>
+   <button class="secondary" id="counselorModeBtn" onclick="toggleCounselorMode()">🔐 Danışman Modu</button>
+  </div>
+
+  <div id="studentCounselForm">
+   <p class="muted" style="margin-bottom:14px;">Paylaşmak istediğin bir konuyu, soruyu veya bireysel görüşme talebini okul rehberlik servisine iletebilirsin.</p>
+
+   <div class="form-group">
+    <label class="form-label" for="counselTopic">Konu Alanı</label>
+    <select id="counselTopic" class="input-field">
+     <option value="Akademik & Sınav Kaygısı">Akademik & Sınav Kaygısı</option>
+     <option value="Arkadaşlık & Akran İlişkileri">Arkadaşlık & Akran İlişkileri</option>
+     <option value="Kariyer & Meslek Seçimi">Kariyer & Meslek Seçimi</option>
+     <option value="Duygusal Destek & Kişisel">Duygusal Destek & Kişisel</option>
+     <option value="Dijital Güvenlik & Teknoloji">Dijital Güvenlik & Teknoloji</option>
+    </select>
+   </div>
+
+   <div class="form-group" id="studentNameGroup">
+    <label class="form-label" for="studentName">Adın ve Sınıfın</label>
+    <input type="text" id="studentName" class="input-field" placeholder="Örn: Ahmet Yılmaz - 8/A" maxlength="50">
+   </div>
+
+   <label class="checkbox-row">
+    <input type="checkbox" id="anonCheck" onchange="toggleAnon()">
+    <span>İsmimi gizli tut (Anonim soru olarak gönder)</span>
+   </label>
+
+   <div class="form-group">
+    <label class="form-label" for="counselMessage">Mesajın veya Sorun</label>
+    <textarea id="counselMessage" class="input-field" placeholder="Kısaca bahsetmek istediğin konuyu buraya yazabilirsin..." maxlength="400"></textarea>
+   </div>
+
+   <button class="primary" onclick="submitCounseling()">Talebi Gönder</button>
+   <div id="counselFeedback" class="guidance-note hidden"></div>
+  </div>
+
+  <!-- DANIŞMAN YÖNETİM PANELİ & PDR ANALİZ NABZI -->
+  <div id="counselorBanner" class="guidance-note hidden">
+   <strong>👩‍⚕️ Rehber Öğretmen (Danışman) Paneli Aktif</strong>
+   <div id="counselorPulseStats" style="margin:8px 0; padding:8px 10px; background:var(--surface); border-radius:10px; font-size:12.5px;"></div>
+   <div class="goal-form" style="margin-top:8px; margin-bottom:0;">
+    <input type="text" id="pinNoticeInput" class="input-field" style="flex:1;" placeholder="Bültene yeni duyuru sabitle..." maxlength="150">
+    <button class="primary" style="width:auto; padding:0 14px;" onclick="updatePinnedNotice()">Yayınla</button>
+   </div>
+  </div>
+ </div>
+
+ <div class="card">
+  <span class="section-tag">📋 Başvuru Kayıtları</span>
+  <h2 id="requestListTitle">Gönderdiğim Talepler</h2>
+  <div id="requestList"></div>
+ </div>
+</section>
+
+<!-- 8. GELİŞİMİM, PROFİL & KARNE -->
+<section id="progress" class="page">
+ <div class="stat-row">
+  <div class="stat">
+   <span class="muted">Toplam Puan</span>
+   <strong id="totalPoints">0</strong>
+  </div>
+  <div class="stat">
+   <span class="muted">Oyun</span>
+   <strong id="completedGames">0</strong>
+  </div>
+  <div class="stat">
+   <span class="muted">Rozet</span>
+   <strong id="badgeCount">0/7</strong>
+  </div>
+ </div>
+
+ <!-- KİŞİSEL ÖĞRENCİ PROFİLİ -->
+ <div class="card">
+  <span class="section-tag">👤 Öğrenci Profili</span>
+  <h2>Kişisel Bilgilerim</h2>
+  <div class="goal-form" style="margin-bottom:0;">
+   <input type="text" id="profileNameInput" class="input-field" style="flex:2;" placeholder="Adın Soyadın" maxlength="40">
+   <input type="text" id="profileClassInput" class="input-field" style="flex:1;" placeholder="Sınıf (Örn: 8/A)" maxlength="20">
+   <button class="primary" style="width:auto; padding:0 16px;" onclick="saveProfile()">Kaydet</button>
+  </div>
+ </div>
+
+ <!-- AKTİVİTE DAĞILIM GRAFİĞİ -->
+ <div class="card">
+  <span class="section-tag">📈 Gelişim Analizi</span>
+  <h2>Aktivite Dağılımı & Güçlü Alanın</h2>
+  <p class="muted" id="strongestAreaText">Aktivitelerini tamamladıkça en güçlü gelişim alanın burada öne çıkar.</p>
+  <div class="dist-bar" id="activityDistBar"></div>
+  <div class="dist-legend" id="activityDistLegend"></div>
+ </div>
+
+ <div class="card">
+  <span class="section-tag">🏆 Seviye Durumu</span>
+  <h2 id="rank">Yeni Başlangıç</h2>
+  <div class="progress">
+   <div class="progress-fill" id="rankProgress"></div>
+  </div>
+  <p id="nextRank" class="muted">İlk puanlarını kazan!</p>
+ </div>
+
+ <!-- 7 GÜNLÜK DUYGU GRAFİĞİ -->
+ <div class="card">
+  <span class="section-tag">📊 Duygu Takibi</span>
+  <h2>Son 7 Günlük Duygu Özeti</h2>
+  <div class="mood-chart-row" id="weeklyMoodChart"></div>
+ </div>
+
+ <!-- ROZET VİTRİNİ -->
+ <div class="card">
+  <span class="section-tag">🎖️ Başarı Vitrini</span>
+  <h2>Rozetlerim</h2>
+  <div class="badge-grid" id="badges"></div>
+ </div>
+
+ <!-- VERİ YEDEKLEME & CİHAZ AKTARIMI -->
+ <div class="card">
+  <span class="section-tag">💾 Veri Yedekleme & Taşıma</span>
+  <h2>Gelişim Verilerini Yedekle / Geri Yükle</h2>
+  <p class="muted" style="margin-bottom:10px;">Başka bir telefon veya tabletten devam etmek için yedek kodunu kopyalayıp orada geri yükleyebilirsin.</p>
+  <div style="display:flex; gap:8px; flex-wrap:wrap;">
+   <button class="secondary" onclick="exportBackupCode()">📤 Yedek Kodunu Kopyala</button>
+   <button class="secondary" onclick="importBackupCode()">📥 Yedek Kodundan Yükle</button>
+  </div>
+ </div>
+
+ <!-- KARNE ÇIKTISI & SIFIRLAMA -->
+ <div class="card" style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+  <button class="primary" style="width:auto; flex:1;" onclick="window.print()">🖨️ Gelişim Karnesini Yazdır / PDF</button>
+  <button class="secondary danger-btn" onclick="resetProgress()">Verileri Sıfırla</button>
+ </div>
+</section>
+
+<footer>DİJİTAL DÜNYAM • PSİKOLOJİK REHBERLİK VE ÖĞRENCİ GELİŞİMİ</footer>
+</div>
+
+<!-- TOAST BİLDİRİMİ -->
+<div id="toast" class="toast"><span>✨</span><span id="toastText">İşlem kaydedildi</span></div>
+
+<!-- YÜZEN CAM ALT MENÜ -->
+<nav>
+ <button class="active" onclick="showPage('home',this)">
+  <span>⌂</span>Ana Sayfa
+ </button>
+ <button onclick="showPage('focus',this)">
+  <span>⏱</span>Odak
+ </button>
+ <button onclick="showPage('games',this)">
+  <span>◈</span>Oyunlar
+ </button>
+ <button onclick="showPage('riasec',this)">
+  <span>🧭</span>Keşif
+ </button>
+ <button onclick="showPage('support',this)">
+  <span>🛡️</span>Destek
+ </button>
+ <button onclick="showPage('goals',this)">
+  <span>☑</span>Hedefler
+ </button>
+ <button onclick="showPage('counseling',this)">
+  <span>💬</span>Rehberlik
+ </button>
+ <button onclick="showPage('progress',this)">
+  <span>★</span>Gelişim
+ </button>
+</nav>
+
+<script>
+// DURUM YÖNETİMİ (LocalStorage)
+let selectedLevel = localStorage.getItem("dd_level") || "";
+let todayMood = localStorage.getItem("dd_mood") || "";
+let moodIntensity = Number(localStorage.getItem("dd_mood_int")) || 5;
+let totalPoints = Number(localStorage.getItem("dd_points")) || 0;
+let completed = Number(localStorage.getItem("dd_completed")) || 0;
+let focusMinutes = Number(localStorage.getItem("dd_focus_min")) || 0;
+let checklistRewarded = localStorage.getItem("dd_chk_rewarded") === "true";
+
+let profileName = localStorage.getItem("dd_prof_name") || "";
+let profileClass = localStorage.getItem("dd_prof_class") || "";
+let pinnedNotice = localStorage.getItem("dd_pinned_notice") || "Sınav dönemlerinde uyku düzenini korumak ve günde 25 dakikalık odak bloklarıyla çalışmak kaygıyı önemli ölçüde azaltır.";
+
+let earnedBadges = JSON.parse(localStorage.getItem("dd_badges") || "[]");
+let goals = JSON.parse(localStorage.getItem("dd_goals") || "[]");
+let requests = JSON.parse(localStorage.getItem("dd_requests") || "[]");
+let events = JSON.parse(localStorage.getItem("dd_events") || "[]");
+let journalEntries = JSON.parse(localStorage.getItem("dd_journal") || "[]");
+let moodHistory = JSON.parse(localStorage.getItem("dd_mood_hist") || "[]");
+let cbtThoughts = JSON.parse(localStorage.getItem("dd_cbt") || "[]");
+let selectedStrengths = JSON.parse(localStorage.getItem("dd_strengths") || "[]");
+let timeCapsules = JSON.parse(localStorage.getItem("dd_capsules") || "[]");
+
+const defaultCoping = [
+ "Soğuk suyla yüzümü yıkamak",
+ "Sevdiğim 2 şarkıyı dinlemek",
+ "Pencereyi açıp 3 derin nefes almak",
+ "Kısa bir yürüyüş yapmak",
+ "Güvendiğim bir arkadaşıma yazmak"
+];
+let copingKit = JSON.parse(localStorage.getItem("dd_coping") || JSON.stringify(defaultCoping));
+
+const defaultSafeCircle = [
+ { id: 1, name: "Okul Rehberlik Servisi", note: "Okul Psikolojik Danışmanı" },
+ { id: 2, name: "Ailem (Anne / Baba)", note: "Her zaman ulaşabileceğim destek" }
+];
+let safeCircle = JSON.parse(localStorage.getItem("dd_safe_circle") || JSON.stringify(defaultSafeCircle));
+
+const defaultChecklist = [
+ { id: 1, text: "Ders kitaplarımı ve defterlerimi çantama koydum", done: false },
+ { id: 2, text: "Bugünkü ödevlerimi kontrol ettim", done: false },
+ { id: 3, text: "Su şişemi ve sağlıklı atıştırmalığımı aldım", done: false },
+ { id: 4, text: "Bugün kendime ulaşılabilir bir hedef belirledim", done: false }
+];
+let checklist = JSON.parse(localStorage.getItem("dd_checklist") || JSON.stringify(defaultChecklist));
+
+let isDark = localStorage.getItem("dd_theme") === "dark";
+let soundEnabled = localStorage.getItem("dd_sound") !== "off";
+let counselorMode = false;
+
+// YAN MENÜ (DRAWER) KONTROLLERİ
+function openMenu() {
+ playTone("click");
+ updateDrawerInfo();
+ document.getElementById("sideDrawer").classList.add("open");
+ document.getElementById("drawerBackdrop").classList.add("open");
+}
+
+function closeMenu() {
+ document.getElementById("sideDrawer").classList.remove("open");
+ document.getElementById("drawerBackdrop").classList.remove("open");
+}
+
+function menuNavigate(pageId) {
+ closeMenu();
+ showPage(pageId);
+}
+
+function jumpToSection(pageId, targetId) {
+ closeMenu();
+ showPage(pageId);
+ setTimeout(() => {
+  const el = document.getElementById(targetId);
+  if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+ }, 120);
+}
+
+function jumpToSub(pageId, panelId, tabIdx) {
+ closeMenu();
+ showPage(pageId);
+ setTimeout(() => {
+  const page = document.getElementById(pageId);
+  const tabs = page.querySelectorAll(".sub-tab");
+  if (tabs[tabIdx]) switchSubTab(pageId, panelId, tabs[tabIdx]);
+ }, 80);
+}
+
+function updateDrawerInfo() {
+ const nameEl = document.getElementById("drawerUserName");
+ const subEl = document.getElementById("drawerUserSub");
+ if (nameEl) nameEl.innerText = profileName ? `${profileName}${profileClass ? " (" + profileClass + ")" : ""}` : "Hoş Geldin, Öğrenci";
+ if (subEl) subEl.innerText = `${selectedLevel || "Kademe seçilmedi"} • ⭐ ${totalPoints} Puan`;
+}
+
+document.addEventListener("keydown", e => {
+ if (e.key === "Escape") closeMenu();
+});
+
+// KONFETİ ANİMASYONU
+function launchConfetti() {
+ const canvas = document.getElementById("confettiCanvas");
+ const ctx = canvas.getContext("2d");
+ canvas.width = window.innerWidth;
+ canvas.height = window.innerHeight;
+
+ const colors = ["#0d9488", "#6366f1", "#f59e0b", "#10b981", "#ec4899"];
+ const pieces = Array.from({ length: 55 }, () => ({
+  x: Math.random() * canvas.width,
+  y: -20 - Math.random() * 100,
+  r: 4 + Math.random() * 5,
+  c: colors[Math.floor(Math.random() * colors.length)],
+  vy: 3 + Math.random() * 4,
+  vx: -2 + Math.random() * 4
+ }));
+
+ let frames = 0;
+ function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  pieces.forEach(p => {
+   p.x += p.vx;
+   p.y += p.vy;
+   ctx.fillStyle = p.c;
+   ctx.beginPath();
+   ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+   ctx.fill();
+  });
+  frames++;
+  if (frames < 85) requestAnimationFrame(draw);
+  else ctx.clearRect(0, 0, canvas.width, canvas.height);
+ }
+ draw();
+}
+
+// ALT SEKME GEÇİŞLERİ (SEGMENTED TABS)
+function switchSubTab(pageId, panelId, btn) {
+ playTone("click");
+ const page = document.getElementById(pageId);
+ page.querySelectorAll(".sub-panel").forEach(p => p.classList.add("hidden"));
+ document.getElementById(panelId).classList.remove("hidden");
+
+ page.querySelectorAll(".sub-tab").forEach(t => t.classList.remove("active"));
+ btn.classList.add("active");
+}
+
+// GÜNLÜK SERİ (STREAK) TAKİBİ
+function updateStreak() {
+ const today = new Date().toISOString().slice(0, 10);
+ const lastVisit = localStorage.getItem("dd_last_visit");
+ let streak = Number(localStorage.getItem("dd_streak")) || 1;
+
+ if (lastVisit && lastVisit !== today) {
+  const diff = Math.round((new Date(today) - new Date(lastVisit)) / (1000 * 60 * 60 * 24));
+  if (diff === 1) streak++;
+  else if (diff > 1) streak = 1;
+ }
+ localStorage.setItem("dd_last_visit", today);
+ localStorage.setItem("dd_streak", streak);
+ document.getElementById("streakBadge").innerText = `🔥 ${streak} Gün`;
+}
+
+// DİJİTAL ZİHİN BAHÇESİ GÜNCELLEME
+function updateMindGarden() {
+ const emojiEl = document.getElementById("gardenEmoji");
+ const titleEl = document.getElementById("gardenStageTitle");
+ const descEl = document.getElementById("gardenStageDesc");
+
+ if (totalPoints >= 250) {
+  emojiEl.innerText = "🌳";
+  titleEl.innerText = `Çiçek Açan Bilgelik Ağacı (${totalPoints} Puan)`;
+  descEl.innerText = "Harika bir istikrar! Öz-farkındalık alışkanlıkların kök saldı ve çiçek açtı.";
+ } else if (totalPoints >= 120) {
+  emojiEl.innerText = "🌷";
+  titleEl.innerText = `Genç Fidan Aşaması (${totalPoints} Puan)`;
+  descEl.innerText = "Bahçen hızla büyüyor! Yeni oyunlar ve hedeflerle ağaca dönüşmesine çok az kaldı.";
+ } else if (totalPoints >= 40) {
+  emojiEl.innerText = "🌿";
+  titleEl.innerText = `Yeşeren Filiz Aşaması (${totalPoints} Puan)`;
+  descEl.innerText = "İlk adımlarını attın ve filizin yeşerdi. Düzenli pratikle büyümeye devam et!";
+ } else {
+  emojiEl.innerText = "🌱";
+  titleEl.innerText = `Tohum Aşaması (${totalPoints} Puan)`;
+  descEl.innerText = "Farkındalık oyunları, odaklanma ve günlük notlarla zihin bahçeni büyütebilirsin.";
+ }
+}
+
+// DUYGU ŞİDDETİ TERMOMETRESİ
+function updateThermometer(val) {
+ moodIntensity = Number(val);
+ localStorage.setItem("dd_mood_int", moodIntensity);
+ document.getElementById("thermoValText").innerText = `${moodIntensity} / 10`;
+ document.getElementById("sumMoodSub").innerText = `Şiddet: ${moodIntensity}/10`;
+
+ const adviceEl = document.getElementById("thermoAdviceText");
+ if (moodIntensity >= 8) {
+  adviceEl.innerHTML = `<span style="color:#ef4444; font-weight:700;">Yüksek yoğunluk!</span> Destek sekmesindeki 5-4-3-2-1 topraklanma aracını veya Güvenli Çemberini kullanabilirsin.`;
+ } else if (moodIntensity >= 4) {
+  adviceEl.innerText = "Orta düzeyde yoğunluk. BDT Düşünce Dönüştürücü veya kısa bir nefes molası iyi gelebilir.";
+ } else {
+  adviceEl.innerText = "Düşük ve dengeli yoğunluk. Günlük hedeflerine odaklanmak için uygun bir an.";
+ }
+}
+
+// ÖĞRENCİ PROFİLİ
+function saveProfile() {
+ profileName = document.getElementById("profileNameInput").value.trim();
+ profileClass = document.getElementById("profileClassInput").value.trim();
+ localStorage.setItem("dd_prof_name", profileName);
+ localStorage.setItem("dd_prof_class", profileClass);
+ applyProfileUI();
+ updateDrawerInfo();
+ playTone("correct");
+ showToast("Profil bilgilerin kaydedildi", "👤");
+}
+
+function applyProfileUI() {
+ document.getElementById("profileNameInput").value = profileName;
+ document.getElementById("profileClassInput").value = profileClass;
+ if (profileName) {
+  document.getElementById("headerGreeting").innerText = `Merhaba, ${profileName}.`;
+  const stInput = document.getElementById("studentName");
+  if (stInput && !stInput.value) {
+   stInput.value = profileClass ? `${profileName} - ${profileClass}` : profileName;
+  }
+ } else {
+  document.getElementById("headerGreeting").innerText = "Kendini keşfet.";
+ }
+}
+
+// CANLI TARİH GÖSTERİMİ
+function renderLiveDate() {
+ const now = new Date();
+ const options = { day: "numeric", month: "long", year: "numeric", weekday: "long" };
+ document.getElementById("liveDateText").innerText = now.toLocaleDateString("tr-TR", options) + " • Öğrenci Gelişim Platformu";
+}
+
+// TOAST BİLDİRİM SİSTEMİ
+let toastTimeout = null;
+function showToast(msg, icon = "✨") {
+ const toast = document.getElementById("toast");
+ toast.querySelector("span").innerText = icon;
+ document.getElementById("toastText").innerText = msg;
+ toast.classList.add("show");
+ clearTimeout(toastTimeout);
+ toastTimeout = setTimeout(() => toast.classList.remove("show"), 2600);
+}
+
+// WEB AUDIO API SES SENTEZLEYİCİ
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+
+function playTone(type) {
+ if (!soundEnabled) return;
+ try {
+  if (!audioCtx) audioCtx = new AudioCtx();
+  if (audioCtx.state === "suspended") audioCtx.resume();
+
+  const now = audioCtx.currentTime;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+
+  if (type === "correct") {
+   osc.type = "sine";
+   osc.frequency.setValueAtTime(523.25, now);
+   osc.frequency.setValueAtTime(659.25, now + 0.1);
+   gain.gain.setValueAtTime(0.14, now);
+   gain.gain.exponentialRampToValueAtTime(0.001, now + 0.32);
+   osc.start(now);
+   osc.stop(now + 0.32);
+  } else if (type === "wrong") {
+   osc.type = "triangle";
+   osc.frequency.setValueAtTime(240, now);
+   osc.frequency.linearRampToValueAtTime(190, now + 0.25);
+   gain.gain.setValueAtTime(0.12, now);
+   gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+   osc.start(now);
+   osc.stop(now + 0.28);
+  } else if (type === "win") {
+   osc.type = "sine";
+   osc.frequency.setValueAtTime(523.25, now);
+   osc.frequency.setValueAtTime(659.25, now + 0.11);
+   osc.frequency.setValueAtTime(783.99, now + 0.22);
+   gain.gain.setValueAtTime(0.15, now);
+   gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+   osc.start(now);
+   osc.stop(now + 0.5);
+  } else if (type === "click") {
+   osc.type = "sine";
+   osc.frequency.setValueAtTime(420, now);
+   gain.gain.setValueAtTime(0.05, now);
+   gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+   osc.start(now);
+   osc.stop(now + 0.08);
+  }
+ } catch (e) {}
+}
+
+function toggleSound() {
+ soundEnabled = !soundEnabled;
+ localStorage.setItem("dd_sound", soundEnabled ? "on" : "off");
+ document.getElementById("soundBtn").innerText = soundEnabled ? "🔊" : "🔇";
+ if (soundEnabled) playTone("click");
+ showToast(soundEnabled ? "Ses efektleri açıldı" : "Ses efektleri kapatıldı", soundEnabled ? "🔊" : "🔇");
+}
+
+// 24 SAATLİK YAŞAM DENGESİ PLANLAYICI
+function updateLifeBalance() {
+ const s = Math.max(0, Number(document.getElementById("balStudy").value) || 0);
+ const sl = Math.max(0, Number(document.getElementById("balSleep").value) || 0);
+ const h = Math.max(0, Number(document.getElementById("balHobby").value) || 0);
+ const sc = Math.max(0, Number(document.getElementById("balScreen").value) || 0);
+ const sum = s + sl + h + sc;
+
+ const bar = document.getElementById("lifeBalanceBar");
+ const total = Math.max(24, sum);
+ bar.innerHTML = `
+  <div style="width:${(s/total)*100}%; background:#0d9488;" title="Ders"></div>
+  <div style="width:${(sl/total)*100}%; background:#6366f1;" title="Uyku"></div>
+  <div style="width:${(h/total)*100}%; background:#10b981;" title="Hobi"></div>
+  <div style="width:${(sc/total)*100}%; background:#f59e0b;" title="Ekran"></div>
+ `;
+
+ const fb = document.getElementById("lifeBalanceFeedback");
+ if (sum > 24) {
+  fb.innerHTML = `⚠️ Toplam <strong>${sum} saat</strong> girdin (24 saati aştı). Saatleri dengeleyebilirsin.`;
+ } else {
+  fb.innerHTML = `Planlanan: <strong>${sum}/24 saat</strong> • Kalan serbest zaman: <strong>${24 - sum} saat</strong>`;
+ }
+}
+
+// ZAMAN KAPSÜLÜ (GELECEKTEKİ KENDİME MEKTUP)
+function saveTimeCapsule() {
+ const date = document.getElementById("capsuleDateInput").value;
+ const text = document.getElementById("capsuleTextInput").value.trim();
+ if (!date || !text) {
+  showToast("Lütfen açılış tarihi ve mektubunu yaz", "⚠️");
+  return;
+ }
+
+ playTone("win");
+ timeCapsules.unshift({ id: Date.now(), date, text });
+ localStorage.setItem("dd_capsules", JSON.stringify(timeCapsules));
+ document.getElementById("capsuleDateInput").value = "";
+ document.getElementById("capsuleTextInput").value = "";
+
+ totalPoints += 10;
+ saveStats();
+ updateProgress();
+ renderTimeCapsules();
+ showToast("Mektubun mühürlendi! +10 Puan", "✉️");
+}
+
+function deleteTimeCapsule(id) {
+ timeCapsules = timeCapsules.filter(c => c.id !== id);
+ localStorage.setItem("dd_capsules", JSON.stringify(timeCapsules));
+ renderTimeCapsules();
+}
+
+function renderTimeCapsules() {
+ const container = document.getElementById("capsuleListContainer");
+ if (timeCapsules.length === 0) {
+  container.innerHTML = "";
+  return;
+ }
+ container.innerHTML = "";
+ const today = new Date().toISOString().slice(0, 10);
+
+ timeCapsules.forEach(c => {
+  const isUnlocked = today >= c.date;
+  const formatted = new Date(c.date).toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" });
+  const box = document.createElement("div");
+  box.className = "request-card";
+  box.innerHTML = `
+   <div class="request-top">
+    <strong style="font-size:13.5px;">${isUnlocked ? "📬 Mektubun Açıldı!" : "🔒 Mühürlü Zaman Kapsülü"}</strong>
+    <div style="display:flex; align-items:center; gap:6px;">
+     <span class="badge-mini">${formatted}</span>
+     <button class="del-btn" onclick="deleteTimeCapsule(${c.id})" title="Sil">✕</button>
+    </div>
+   </div>
+   <p class="cap-body" style="font-size:13px; margin:6px 0 0;"></p>
+  `;
+  box.querySelector(".cap-body").textContent = isUnlocked ? c.text : "Bu mektup belirlediğin tarihe kadar kilitli kalacak.";
+  container.appendChild(box);
+ });
+}
+
+// BEN DİLİ CÜMLE OLUŞTURUCU
+function buildIMessage() {
+ const beh = document.getElementById("iBehaviorInput").value.trim();
+ const emo = document.getElementById("iEmotionInput").value.trim();
+ const need = document.getElementById("iNeedInput").value.trim();
+
+ if (!beh || !emo || !need) {
+  showToast("Lütfen 3 adımı da doldur", "⚠️");
+  return;
+ }
+
+ playTone("correct");
+ const box = document.getElementById("iMessageResult");
+ box.innerHTML = `<strong>💬 Hazır Ben Dili İfaden:</strong><br>"${beh}, kendimi ${emo} hissediyorum; bu yüzden ${need}"`;
+ box.classList.remove("hidden");
+
+ totalPoints += 10;
+ saveStats();
+ updateProgress();
+ showToast("Ben dili cümlen hazır! +10 Puan", "💬");
+}
+
+// VIA KARAKTER GÜÇLERİ & DEĞERLER PUSULASI
+const viaStrengthsList = [
+ "🔍 Merak", "💪 Azim", "⚖️ Adalet", "🎨 Yaratıcılık",
+ "👑 Liderlik", "🧘 Öz-Denetim", "🙏 Şükran", "🦁 Cesaret",
+ "🤝 Nezaket", "🧠 Analitik Düşünme", "🌟 Umut", "👥 Takım Ruhu"
+];
+
+function renderStrengthChips() {
+ const container = document.getElementById("strengthChipsContainer");
+ container.innerHTML = "";
+ viaStrengthsList.forEach(s => {
+  const btn = document.createElement("button");
+  btn.className = "strength-chip" + (selectedStrengths.includes(s) ? " selected" : "");
+  btn.innerText = s;
+  btn.onclick = () => toggleStrength(s);
+  container.appendChild(btn);
+ });
+ document.getElementById("strengthCountText").innerText = `Seçilen: ${selectedStrengths.length} / 5`;
+ document.getElementById("saveStrengthsBtn").disabled = selectedStrengths.length !== 5;
+}
+
+function toggleStrength(strength) {
+ playTone("click");
+ if (selectedStrengths.includes(strength)) {
+  selectedStrengths = selectedStrengths.filter(x => x !== strength);
+ } else {
+  if (selectedStrengths.length >= 5) {
+   showToast("En fazla 5 temel güç seçebilirsin", "💎");
+   return;
+  }
+  selectedStrengths.push(strength);
+ }
+ localStorage.setItem("dd_strengths", JSON.stringify(selectedStrengths));
+ renderStrengthChips();
+}
+
+function generateCharacterCard() {
+ if (selectedStrengths.length !== 5) return;
+ playTone("win");
+ launchConfetti();
+ const resBox = document.getElementById("characterCardResult");
+ resBox.innerHTML = `
+  <strong>💎 Kişisel Karakter Kimlik Kartın:</strong><br>
+  Senin temel 5 gücün: <strong>${selectedStrengths.join(" • ")}</strong>.<br>
+  <em>Rehberlik Önerisi:</em> Zorlandığın bir ders veya sosyal durumda bu 5 gücünden birini bilinçli olarak devreye sokmak öz-yeterlik duygularını hızla güçlendirir.
+ `;
+ resBox.classList.remove("hidden");
+
+ if (!localStorage.getItem("dd_via_rewarded")) {
+  localStorage.setItem("dd_via_rewarded", "true");
+  totalPoints += 15;
+  saveStats();
+  updateProgress();
+  showToast("Karakter Kimlik Kartı oluşturuldu! +15 Puan", "💎");
+ } else {
+  showToast("Karakter Kimlik Kartın güncellendi", "💎");
+ }
+}
+
+// AKŞAM KAPANIŞI & ZİHİN BOŞALTMA KUTUSU
+function lockNightWorry() {
+ const input = document.getElementById("nightWorryInput");
+ const val = input.value.trim();
+ if (!val) return;
+ playTone("correct");
+ input.value = "";
+ const box = document.getElementById("nightWorryStatus");
+ box.innerHTML = `<strong>🔒 Zihin Kutusuna Kilitlendi:</strong> "${val}" düşüncesi sabaha kadar güvenle saklandı. Şimdi zihnini dinlendirebilirsin.`;
+ box.classList.remove("hidden");
+
+ totalPoints += 5;
+ saveStats();
+ updateProgress();
+ showToast("Düşünce zihin kutusuna kilitlendi! +5 Puan", "🌙");
+}
+
+// KİŞİSEL BAŞA ÇIKMA ÇANTASI
+function renderCopingKit() {
+ const container = document.getElementById("copingTagsList");
+ container.innerHTML = "";
+ copingKit.forEach((item, idx) => {
+  const chip = document.createElement("span");
+  chip.className = "strength-chip";
+  chip.style.display = "inline-flex";
+  chip.style.alignItems = "center";
+  chip.style.gap = "6px";
+  chip.innerHTML = `<span class="c-txt"></span> <b style="cursor:pointer; opacity:0.6;" onclick="removeCopingItem(${idx})">×</b>`;
+  chip.querySelector(".c-txt").textContent = item;
+  container.appendChild(chip);
+ });
+}
+
+function addCopingItem() {
+ const input = document.getElementById("copingInput");
+ const val = input.value.trim();
+ if (!val) return;
+ playTone("click");
+ copingKit.push(val);
+ input.value = "";
+ localStorage.setItem("dd_coping", JSON.stringify(copingKit));
+ renderCopingKit();
+ showToast("Başa çıkma çantana eklendi", "🎒");
+}
+
+function removeCopingItem(idx) {
+ copingKit.splice(idx, 1);
+ localStorage.setItem("dd_coping", JSON.stringify(copingKit));
+ renderCopingKit();
+}
+
+function pickRandomCoping() {
+ if (copingKit.length === 0) return;
+ playTone("correct");
+ const pick = copingKit[Math.floor(Math.random() * copingKit.length)];
+ const box = document.getElementById("copingSuggestionBox");
+ box.innerHTML = `<strong>✨ Şu An Senin İçin Önerim:</strong><br>${pick}`;
+ box.classList.remove("hidden");
+}
+
+// ZOR KARARLARDA ARTI-EKSİ TERAZİSİ
+function evaluateDecision() {
+ const topic = document.getElementById("decTopicInput").value.trim() || "Bu karar";
+ const pDo = document.getElementById("decProDo").value.trim();
+ const cDo = document.getElementById("decConDo").value.trim();
+ const pDont = document.getElementById("decProDont").value.trim();
+ const cDont = document.getElementById("decConDont").value.trim();
+
+ if (!pDo && !cDo && !pDont && !cDont) {
+  showToast("Lütfen terazi kutularından en az birini doldur", "⚠️");
+  return;
+ }
+
+ playTone("correct");
+ const doScore = (pDo ? 2 : 0) + (cDont ? 2 : 0) - (cDo ? 1 : 0);
+ const dontScore = (pDont ? 2 : 0) + (cDo ? 1 : 0) - (cDont ? 1 : 0);
+
+ const advice = doScore >= dontScore
+  ? "Terazi <strong>harekete geçme / deneme</strong> yönünde daha ağır basıyor. Küçük bir adımla başlayabilirsin."
+  : "Terazi şu an <strong>bekleme veya mevcut düzeni koruma</strong> yönünde daha dengeli görünüyor.";
+
+ const box = document.getElementById("decisionResultBox");
+ box.innerHTML = `<strong>⚖️ "${topic}" Değerlendirmesi:</strong><br>${advice}`;
+ box.classList.remove("hidden");
+}
+
+// KADEMEYE GÖRE OYUN HAVUZU
+const gameBank = {
+ empati: {
+  name: "Empati",
+  icon: "🤝",
+  İlkokul: [
+   ["Oyun oynarken arkadaşın düştü ve ağlamaya başladı. Ne yaparsın?", ["Yanına gidip iyi misin diye sorarım", "Oyunuma devam ederim", "Ona gülerim"], 0, "Arkadaşımızın üzüntüsünü fark edip yanında olmak empati kurmanın ilk adımıdır."],
+   ["Sınıfa yeni gelen arkadaşın tek başına oturuyor. Nasıl davranırsın?", ["Yanına gidip tanışırım ve oyuna çağırırım", "Hiç konuşmam", "Başka yere bakarım"], 0, "Yeni ortama alışmaya çalışan birine kucak açmak hem onu mutlu eder hem yeni bir dostluk başlatır."],
+   ["Empati kurmak ne demektir?", ["Kendimizi arkadaşımızın yerine koyup duygusunu anlamak", "Her zaman kendi istediğimizi yapmak", "Başkalarına kızmak"], 0, "Empati, başkasının penceresinden bakabilmektir."]
+  ],
+  Ortaokul: [
+   ["Yakın arkadaşın sınavdan düşük aldığı için çok sessiz ve üzgün. Ne yaparsın?", ["Onu yargılamadan dinler ve yanında olduğumu hissettiririm", "Ben daha yüksek aldım derim", "Abarttığını söylerim"], 0, "Üzgün birine akıl vermeden önce onu anlamaya çalışmak ve dinlemek en sağlıklı destektir."],
+   ["Grup çalışmasında bir arkadaşın fikrini söylerken çekiniyor. Nasıl tepki verirsin?", ["Söz hakkı verip fikrini dikkatle dinlerim", "Sözünü keserim", "Görmezden gelirim"], 0, "Herkese kendini ifade etme alanı tanımak sağlıklı iletişimin temelidir."],
+   ["Empati ile sempati arasındaki fark nedir?", ["Empati başkasının duygusunu anlamaktır, onun yerine üzülüp çaresiz kalmak değildir", "İkisi tamamen aynıdır", "Empati sadece yakın arkadaşlara duyulur"], 0, "Empati anlayış geliştirir; karşımızdakinin duygusunu fark eder ama kendi sınırlarımızı da koruz."]
+  ],
+  Lise: [
+   ["Bir arkadaşın ailevi bir sorun nedeniyle son günlerde öfkeli davranıyor. En yapıcı yaklaşım nedir?", ["Davranışının arkasındaki duyguyu anlamaya çalışıp sakin bir anda konuşmak", "Hemen sert tepki verip iletişimi kesmek", "Herkesin içinde eleştirmek"], 0, "Öfke çoğu zaman kırgınlık veya kaygının maskesidir; yargısız yaklaşım iletişimi onarır."],
+   ["Farklı yaşam görüşüne sahip bir akranınla tartışırken empati nasıl korunur?", ["Kendi fikrini savunurken onun bakış açısının nedenlerini de anlamaya çalışarak", "Sadece kendi doğrularını dayatarak", "Konuyu alaya alarak"], 0, "Aynı fikirde olmasak bile karşımızdakinin neden öyle düşündüğünü anlamak olgun bir iletişim becerisidir."],
+   ["Aktif dinleme sırasında hangisi empatiyi zedeler?", ["Karşındaki konuşurken vereğin cevabı hazırlamak veya sözünü kesmek", "Göz teması kurmak", "Duygularını özetleyerek anladığını göstermek"], 0, "Aktif dinleme, cevap vermek için değil gerçekten anlamak için dinlemektir."]
+  ]
+ },
+ zorbalik: {
+  name: "Akran Zorbalığı",
+  icon: "🛡️",
+  İlkokul: [
+   ["Bir arkadaşın başka birine sürekli kötü lakap takıyor. Ne yapmalısın?", ["Öğretmenine veya güvendiğin bir yetişkine haber vermelisin", "Sen de gülüp katılmalısın", "Hiçbir şey yokmuş gibi davranmalısın"], 0, "Zorbalık bir oyun değildir; durdurmak için öğretmenimizden yardım istemek doğru bir davranıştır."],
+   ["Zorbalığa uğrayan arkadaşına nasıl destek olabilirsin?", ["Yanına gidip onunla arkadaşlık ederek", "Onu yalnız bırakarak", "Suçu onda arayarak"], 0, "Zorbalığa uğrayan kişi yalnız olmadığını hissettiğinde kendini çok daha güvende hisseder."],
+   ["Aşağıdakilerden hangisi akran zorbalığıdır?", ["Bir arkadaşını bilerek ve sürekli oyundan dışlamak", "Yanlışlıkla çarpıp özür dilemek", "Farklı oyunlar sevmek"], 0, "Kasıtlı ve tekrarlayan şekilde zarar verme davranışı zorbalıktır."]
+  ],
+  Ortaokul: [
+   ["Sınıf WhatsApp grubunda bir arkadaşınızla alay eden mesajlar paylaşılıyor. Ne yapmalısın?", ["Bu paylaşıma katılmayıp durumu rehber öğretmene veya bir yetişkine bildirmelisin", "Komik bulup emoji atmalısın", "Mesajları başkalarına iletmelisin"], 0, "Dijital ortamlarda yapılan alay ve dışlama siber zorbalıktır; seyirci kalmamak çok önemlidir."],
+   ["Akran zorbalığını şakadan ayıran en temel özellik nedir?", ["Kasıtlı olması, süreklilik göstermesi ve karşı tarafa zarar vermesi", "İki tarafın da gülmesi", "Bir kez yanlış anlaşılma yaşanması"], 0, "Şakada herkes eğlenir; zorbalıkta ise bir taraf incinir ve güç dengesizliği vardır."],
+   ["Biri sana sınırlarını aşan rahatsız edici bir şaka yaptığında ne yapmalısın?", ["Net ve kararlı bir dille 'Bu davranışından rahatsız oluyorum' demelisin", "İçine atıp susmalısın", "Aynı şekilde karşılık vermelisin"], 0, "Kişisel sınırlarını net ve sakin biçimde ifade etmek özgüvenli bir koruma yoludur."]
+  ],
+  Lise: [
+   ["Sosyal medyada bir akranının izinsiz fotoğrafı yayılıp alay ediliyor. En doğru tutum nedir?", ["İçeriği yaymamak, mağdura destek olmak ve okul rehberlik servisi/yetkililerle paylaşmak", "Yorumlarda tartışmaya girmek", "Görmezden gelmek"], 0, "Siber zorbalıkta izleyici kalmamak ve dijital izleri büyütmeden destek mekanizmalarını devreye sokmak gerekir."],
+   ["Zorbalık döngüsünde 'seyirci' rolünün etkisi nedir?", ["Sessiz kalarak zorbalık yapan kişiye dolaylı onay ve güç verir", "Zorbalığı kendiliğinden bitirir", "Hiçbir etkisi yoktur"], 0, "Araştırmalar, akranların tepki gösterdiği durumlarda zorbalığın saniyeler içinde durabildiğini göstermektedir."],
+   ["Sağlıklı akran ilişkilerinde çatışma nasıl çözülür?", ["Ben dili kullanarak duyguları ifade edip ortak çözüm arayarak", "Tehdit veya dışlama kullanarak", "Dedikodu yayarak"], 0, "'Ben dili' suçlamadan duyguyu anlatır ve sağlıklı sınır çizmeyi sağlar."]
+  ]
+ },
+ kaygi: {
+  name: "Kaygı Yönetimi",
+  icon: "🌿",
+  İlkokul: [
+   ["Tahtaya kalkacağın zaman kalbin hızlı atmaya başladı. Ne yapabilirsin?", ["Burnundan derin bir nefes alıp yavaşça verebilirsin", "Ağlayıp kaçabilirsin", "Kendine kızabilirsin"], 0, "Derin nefes almak beynimize 'güvendeyim' mesajı gönderir ve kalp atışımızı yavaşlatır."],
+   ["Korktuğun veya endişelendiğin bir şey olduğunda kiminle paylaşmalısın?", ["Anne, baba veya öğretmeninle", "Kimseye söylememelisin", "Sadece kendi başına düşünmelisin"], 0, "Duygularımızı güvendiğimiz büyüklerle paylaştığımızda yükümüz hafifler."],
+   ["Kaygı duygusu neden vardır?", ["Bizi tehlikelere karşı uyarmak ve hazırlamak için", "Bizi üzmek için", "Sadece çocuklarda olduğu için"], 0, "Kaygı doğal bir duygudur; önemli olan onu yönetebilmektir."]
+  ],
+  Ortaokul: [
+   ["Sınav kağıdını gördüğün an bildiklerini unutmuş gibi hissettin. İlk adım ne olmalı?", ["Kalemi bırakıp 3 kez derin nefes almak ve bildiğin en kolay sorudan başlamak", "Panikleyip sınavı bırakmak", "Sürekli saate bakmak"], 0, "Kısa bir nefes molası zihindeki paniği dağıtır ve hafızanın yeniden çalışmasını sağlar."],
+   ["Sınava hazırlanırken kaygıyı azaltan en etkili alışkanlık hangisidir?", ["Konuları küçük parçalara bölüp düzenli tekrar yapmak", "Son gece hiç uyumadan çalışmak", "Hiç çalışmayıp şansa bırakmak"], 0, "Belirsizlik kaygıyı artırır; planlı çalışmak kontrol duygusu kazandırır."],
+   ["Kaygılı düşünceler zihnini sardığında hangisi işe yarar?", ["Düşünceleri kağıda yazıp gerçekçi olup olmadığını sorgulamak", "Sürekli en kötü senaryoyu düşünmek", "Duyguyu bastırmaya çalışmak"], 0, "Düşünceleri yazıya dökmek onları zihinde büyütmek yerine dışarıdan görmemizi sağlar."]
+  ],
+  Lise: [
+   ["Yüksek performans kaygısı yaşayan bir öğrenci için hangi yaklaşım daha sağlıklıdır?", ["Sadece sonuca değil, günlük çalışma sürecine odaklanmak", "Ya hep ya hiç düşüncesiyle hareket etmek", "Kendini sürekli başkalarıyla kıyaslamak"], 0, "Sonuç odaklılık baskı yaratırken, süreç odaklılık sürdürülebilir motivasyon sağlar."],
+   ["Fizyolojik kaygı belirtileri (terleme, çarpıntı) başladığında 4-4-4 nefes tekniği ne işe yarar?", ["Parasempatik sinir sistemini aktive ederek bedeni sakinleştirir", "Kaygıyı tamamen yok eder", "Dikkat dağıtır"], 0, "Beden sakinleştiğinde zihin de tehlike alarmını kapatır."],
+   ["Erteleme davranışı ile kaygı arasında nasıl bir ilişki vardır?", ["Başarısızlık kaygısı çoğu zaman göreve başlamayı ertelemeye yol açar", "İkisi tamamen ilgisizdir", "Ertelemek kaygıyı kalıcı olarak çözer"], 0, "Bir işe sadece 5 dakika ayırarak başlamak erteleme-kaygı döngüsünü kırar."]
+  ]
+ },
+ ozguven: {
+  name: "Özgüven",
+  icon: "⭐",
+  İlkokul: [
+   ["Resim yaparken istediğin gibi olmadı. Ne düşünmelisin?", ["Pratik yaptıkça daha güzel çizebilirim", "Ben hiç resim yapamıyorum", "Boya kalemlerini atmalıyım"], 0, "Henüz yapamıyor olmak, hiçbir zaman yapamayacağımız anlamına gelmez."],
+   ["Özgüvenli bir çocuk nasıl davranır?", ["Fikrini kibar bir şekilde söyler ve yeni şeyler dener", "Herkese bağırır", "Hiç hata yapmayacağını sanır"], 0, "Özgüven, kendini sevmek ve denemekten korkmamaktır."],
+   ["Seni güçlü kılan özelliklerini nasıl fark edersin?", ["Neleri yaparken mutlu olduğunu ve başardığını düşünerek", "Başkalarıyla yarışarak", "Hiçbir şey denemeyerek"], 0, "Her çocuğun kendine özel yetenekleri ve güçlü yönleri vardır."]
+  ],
+  Ortaokul: [
+   ["Bir sunum sırasında heyecanlanıp küçük bir hata yaptın. Özgüvenli yaklaşım nedir?", ["Hatayı doğal karşılayıp sunuma devam etmek ve bundan ders çıkarmak", "Bir daha asla konuşmamaya karar vermek", "Herkesin sana güldüğünü varsaymak"], 0, "Hata yapmak insan olmanın doğal bir parçasıdır; özgüven hatasızlık değil toparlanabilmektir."],
+   ["Kendini başkalarıyla sürekli kıyaslamak özgüveni nasıl etkiler?", ["Kendi güçlü yönlerini görmeni engeller ve yetersizlik hissi yaratır", "Seni daha başarılı yapar", "Hiçbir etkisi yoktur"], 0, "Tek gerçek kıyas, bugünkü halinle dünkü halin arasında olmalıdır."],
+   ["Hayır diyebilmek neden özgüven göstergesidir?", ["Kendi değerlerine ve sınırlarına saygı duyduğunu gösterir", "Bencil olduğunu gösterir", "Arkadaş kaybetmene yol açar"], 0, "İstemediğin bir şeye nazikçe 'hayır' diyebilmek özsaygının temelidir."]
+  ],
+  Lise: [
+   ["Gerçekçi özgüven ile kibir arasındaki temel fark nedir?", ["Özgüven hem güçlü hem gelişime açık yönlerini kabul etmektir; kibir kusursuzluk iddiasıdır", "İkisi aynı şeydir", "Özgüven başkalarını küçümsemektir"], 0, "Sağlıklı özgüven, sınırlarını bilmek ve gelişime açık olmaktır."],
+   ["Konfor alanından çıkıp yeni bir kulübe veya projeye katılmak özgüveni nasıl besler?", ["Öz-yeterlik inancını güçlendirerek 'yapabilirim' deneyimi kazandırır", "Stresi kalıcı hale getirir", "Gereksiz zaman kaybıdır"], 0, "Özgüven düşünerek değil, küçük adımlarla deneyimleyerek inşa edilir."],
+   ["İç eleştirmen sesin (kendini acımasızca yargılama) yükseldiğinde ne yapmalısın?", ["Aynı durumda yakın bir arkadaşına ne söyleyeceğini düşünüp kendine şefkatle yaklaşmalısın", "Bu sesin her zaman haklı olduğuna inanmalısın", "Duygularını yok saymalısın"], 0, "Öz-şefkat, zor zamanlarda kendine bir dost gibi destek olabilmektir."]
+  ]
+ },
+ kariyer: {
+  name: "Kariyer & İlgi",
+  icon: "🧭",
+  İlkokul: [
+   ["Meslekleri tanımak için ne yapabilirsin?", ["Farklı mesleklerin neler yaptığını merak edip büyüklerine sorabilirsin", "Sadece televizyondakilere bakabilirsin", "Şimdiden karar vermek zorundasın"], 0, "Merak etmek ve soru sormak ilgi alanlarımızı keşfetmenin en güzel yoludur."],
+   ["Hangi mesleği seçeceğimize neye göre karar veririz?", ["Sevdiğimiz ve yapmaktan keyif aldığımız şeylere göre", "Sadece arkadaşımızın seçimine göre", "Rastgele"], 0, "Sevdiğimiz işi yapmak bizi mutlu ve başarılı kılar."],
+   ["Okuldaki kulüp ve etkinliklere katılmak neden önemlidir?", ["Nelerden hoşlandığımızı ve yeteneklerimizi keşfetmemizi sağlar", "Sadece vakit geçirmek içindir", "Hiçbir faydası yoktur"], 0, "Farklı etkinlikler denemek gizli yeteneklerimizi ortaya çıkarır."]
+  ],
+  Ortaokul: [
+   ["İlgi alanlarını keşfetmek için hangisi en doğru adımdır?", ["Farklı ders, spor, sanat veya teknoloji etkinliklerini deneyimlemek", "Sadece tek bir alana kapanmak", "Sadece popüler mesleklere bakmak"], 0, "Ortaokul dönemi kendini ve ilgi alanlarını tanıma ve deneme zamanıdır."],
+   ["Yetenek ile ilgi arasındaki fark nedir?", ["İlgi bir şeye duyulan merak ve sevgidir; yetenek o işi öğrenebilme ve yapabilme becerisidir", "İkisi aynı şeydir", "Yetenek hiç çalışmadan oluşur"], 0, "İlgi ve yeteneğin kesiştiği alanlar en verimli kariyer rotalarını oluşturur."],
+   ["Lise tercihlerini düşünürken neye öncelik vermelisin?", ["Kendi öğrenme tarzına, hedeflerine ve akademik ilgilerine", "Sadece çevrenin baskısına", "Okulun uzaklığına"], 0, "Kendi özelliklerine uygun okul türü seçmek motivasyonunu yüksek tutar."]
+  ],
+  Lise: [
+   ["Kariyer planlamasında 'değerler' neden en az yetenekler kadar önemlidir?", ["Çalışma ortamından beklentilerini (yardım etmek, üretmek, bağımsızlık vb.) belirler", "Hiçbir önemi yoktur", "Sadece kazancı ifade eder"], 0, "Kişisel değerleriyle uyumlu meslek seçen bireylerin iş doyumu çok daha yüksektir."],
+   ["Bir mesleği yakından tanımak için en etkili yöntem hangisidir?", ["O mesleği yapan kişilerle konuşmak ve günlük çalışma koşullarını araştırmak", "Sadece puan sıralamasına bakmak", "Dizilerdeki meslek tasvirlerine güvenmek"], 0, "Meslek erbaplarıyla yapılan kısa görüşmeler gerçekçi bir bakış açısı kazandırır."],
+   ["Geleceğin mesleklerine hazırlanırken hangi beceri öne çıkar?", ["Yaşam boyu öğrenme, problem çözme ve dijital okuryazarlık", "Sadece ezber yapabilme", "Tek bir beceriyle yetinme"], 0, "Değişen dünyada uyum sağlama ve sürekli öğrenme en güçlü kariyer sermayesidir."]
+  ]
+ },
+ dijital: {
+  name: "Dijital Denge",
+  icon: "📱",
+  İlkokul: [
+   ["Tablet veya bilgisayarda oyun süren dolduğunda ne yapmalısın?", ["Ekranı kapatıp açık havada oyun veya kitap gibi başka bir etkinliğe geçmelisin", "Gizlice oynamaya devam etmelisin", "Kızıp bağırmalısın"], 0, "Ekran süresi ile oyun ve uyku arasında denge kurmak gözlerimizi ve zihnimizi dinlendirir."],
+   ["İnternette tanımadığın biri sana mesaj gönderip adını veya adresini sorarsa ne yapmalısın?", ["Cevap vermeyip hemen anne, baba veya öğretmenine haber vermelisin", "Bilgilerini yazmalısın", "Fotoğraf göndermelisin"], 0, "Kişisel bilgilerimiz bize özeldir ve internette yabancılarla paylaşılmamalıdır."],
+   ["Uyumadan hemen önce ekrana bakmak neden zararlıdır?", ["Uykuya dalmamızı zorlaştırır ve yorgun uyanmamıza neden olur", "Daha hızlı uyutur", "Hiçbir etkisi yoktur"], 0, "Uykudan en az 1 saat önce ekranları kapatmak kaliteli bir uyku sağlar."]
+  ],
+  Ortaokul: [
+   ["Ders çalışırken telefon bildirimleri sürekli dikkatini dağıtıyor. En etkili çözüm nedir?", ["Çalışma süresince telefonu sessize alıp başka bir odaya koymak", "Her bildirimde 1 dakika bakmak", "Sadece sesi kısmak ama ekrana bakmak"], 0, "Bildirim sesi bile odaklanmayı böler; telefonu görüş alanından çıkarmak verimi artırır."],
+   ["Sosyal medyada herkesin hayatının kusursuz göründüğü paylaşımlara bakarken neyi hatırlamalısın?", ["İnsanların genellikle sadece en iyi anlarını filtreleyerek paylaştığını", "Herkesin senden daha mutlu olduğunu", "Kendi hayatının yetersiz olduğunu"], 0, "Sosyal medya gerçek hayatın tamamı değil, seçilmiş bir vitrinidir."],
+   ["Dijital ayak izi ne anlama gelir?", ["İnternette yaptığımız paylaşım, yorum ve beğenilerin bıraktığı kalıcı izler", "Telefonun adım sayar özelliği", "Sadece silinen mesajlar"], 0, "Çevrimiçi ortamda paylaştığımız her içerik gelecekte de karşımıza çıkabilir."]
+  ],
+  Lise: [
+   ["Sürekli kısa videolar kaydırarak (doomscrolling) saatlerin geçtiğini fark ettiğinde ne yapmalısın?", ["Uygulama süre sınırı koyup fiziksel bir aktivite veya yüz yüze iletişime yönelmelisin", "Uykudan kısıp devam etmelisin", "İrade kontrolünün imkansız olduğunu düşünmelisin"], 0, "Algoritmalar dikkati ekranda tutmak için tasarlanmıştır; bilinçli sınırlar koymak kontrolü geri kazandırır."],
+   ["Çevrimiçi ortamda karşılaştığın sansasyonel bir haberin doğruluğundan nasıl emin olursun?", ["Güvenilir ve birden fazla bağımsız kaynaktan teyit ederek", "Çok fazla beğeni almışsa doğru kabul ederek", "Hemen paylaşarak"], 0, "Bilgi kirliliğine karşı eleştirel dijital okuryazarlık en önemli beceridir."],
+   ["Sağlıklı dijital denge aşağıdakilerden hangisiyle tanımlanır?", ["Teknolojiyi amaçlarımız doğrultusunda kullanmak, ekranın zamanımızı yönetmesine izin vermemek", "Teknolojiyi tamamen hayatımızdan çıkarmak", "Her an çevrimiçi kalmak"], 0, "Teknoloji harika bir araçtır; direksiyonda sen olduğun sürece gelişimini destekler."]
+  ]
+ }
+};
+
+// RIASEC MESLEKİ İLGİ & YETENEK ENVANTERİ VERİLERİ
+const riasecQuestions = [
+ { q: "Bozulan bir cihazın nasıl çalıştığını merak edip tamir etmeye çalışırım.", type: "R" },
+ { q: "Bilimsel deneyler yapmak, araştırmak ve sebep-sonuç ilişkisi kurmak hoşuma gider.", type: "I" },
+ { q: "Resim çizmek, müzik yapmak, hikaye yazmak veya yeni tasarımlar üretmek beni heyecanlandırır.", type: "A" },
+ { q: "Arkadaşlarımı dinlemek, onlara yardımcı olmak ve sorunlarına çözüm bulmak beni mutlu eder.", type: "S" },
+ { q: "Bir grup çalışmasında liderlik etmek, yeni fikirler önermek ve insanları ikna etmek hoşuma gider.", type: "E" },
+ { q: "Defterlerimi, eşyalarımı ve günlük planlarımı düzenli tutmayı severim.", type: "C" },
+ { q: "Açık havada hareket etmeyi, spor yapmayı veya el becerisi gerektiren işlerle uğraşmayı severim.", type: "R" },
+ { q: "Bulmacalar, mantık oyunları veya karmaşık problemleri analiz etmek ilgimi çeker.", type: "I" },
+ { q: "Kendimi özgün ve yaratıcı yollarla ifade etmeyi severim.", type: "A" },
+ { q: "Başkalarına bir konuyu öğretmek veya açıklamak bana keyif verir.", type: "S" },
+ { q: "Okul etkinliklerinde veya projelerde sorumluluk alıp girişimde bulunurum.", type: "E" },
+ { q: "Kuralları belli, adım adım ilerleyen sistemli görevlerde kendimi rahat hissederim.", type: "C" }
+];
+
+const riasecProfiles = {
+ R: { name: "Uygulamacı (Gerçekçi)", desc: "Pratik çözümler üretmeyi, somut araçlarla çalışmayı ve hareket halinde olmayı seversin.", jobs: "Mühendislik, Mimarlık, Bilişim Teknolojileri, Spor Bilimleri, Havacılık" },
+ I: { name: "Araştırmacı", desc: "Meraklı, analitik düşünen ve olayların arkasındaki nedenleri keşfetmeyi seven bir yapın var.", jobs: "Tıp, Yazılım Geliştirme, Psikoloji, Biyoloji, Veri Bilimi, Akademisyenlik" },
+ A: { name: "Yaratıcı (Sanatçı)", desc: "Hayal gücün güçlü; özgün fikirler üretmekten ve estetik bakış açından besleniyorsun.", jobs: "Grafik Tasarım, Edebiyat, Müzik, Sinema/Medya, İç Mimarlık, Oyun Tasarımı" },
+ S: { name: "Sosyal (Yardımsever)", desc: "İnsanlarla iletişim kurmayı, empati geliştirmeyi ve topluma fayda sağlamayı önemsiyorsun.", jobs: "Psikolojik Danışmanlık (PDR), Öğretmenlik, Sağlık Bilimleri, Sosyal Hizmet, Hukuk" },
+ E: { name: "Girişimci", desc: "Hedef odaklı, ikna kabiliyeti yüksek ve ekip yönetiminde sorumluluk alabilen bir lidersin.", jobs: "İşletme, Girişimcilik, Uluslararası İlişkiler, Yöneticilik, Pazarlama" },
+ C: { name: "Düzenli (Geleneksel)", desc: "Planlı, dikkatli, detaylara önem veren ve sistemli çalışmaktan keyif alan bir yapın var.", jobs: "Ekonomi, Finans, Bilgi Yönetimi, Endüstri Mühendisliği, Kamu Yönetimi" }
+};
+
+let riasecIndex = 0;
+let riasecScores = { R: 0, I: 0, A: 0, S: 0, E: 0, C: 0 };
+
+function renderRiasecQuestion() {
+ document.getElementById("riasecStepText").innerText = `${riasecIndex + 1} / ${riasecQuestions.length}`;
+ document.getElementById("riasecProgress").style.width = `${((riasecIndex + 1) / riasecQuestions.length) * 100}%`;
+ document.getElementById("riasecQuestion").innerText = riasecQuestions[riasecIndex].q;
+}
+
+function answerRiasec(score) {
+ playTone("click");
+ const currentType = riasecQuestions[riasecIndex].type;
+ riasecScores[currentType] += score;
+
+ if (riasecIndex < riasecQuestions.length - 1) {
+  riasecIndex++;
+  renderRiasecQuestion();
+ } else {
+  finishRiasec();
+ }
+}
+
+function finishRiasec() {
+ playTone("win");
+ launchConfetti();
+ document.getElementById("riasecQuizCard").classList.add("hidden");
+ document.getElementById("riasecResultCard").classList.remove("hidden");
+
+ const sorted = Object.entries(riasecScores).sort((a, b) => b[1] - a[1]);
+ const top1 = riasecProfiles[sorted[0][0]];
+ const top2 = riasecProfiles[sorted[1][0]];
+
+ document.getElementById("riasecTopTitle").innerText = `${top1.name} & ${top2.name}`;
+ document.getElementById("riasecResultContent").innerHTML = `
+  <strong>1. Baskın Alanın — ${top1.name}:</strong><br>${top1.desc}<br>
+  <em>Önerilen Alanlar:</em> ${top1.jobs}<br><br>
+  <strong>2. Destekleyici Alanın — ${top2.name}:</strong><br>${top2.desc}<br>
+  <em>Önerilen Alanlar:</em> ${top2.jobs}
+ `;
+
+ if (!earnedBadges.includes("Kariyer Kaşifi")) {
+  earnedBadges.push("Kariyer Kaşifi");
+  totalPoints += 20;
+  saveStats();
+  updateProgress();
+  showToast("Kariyer Kaşifi rozeti açıldı! +20 Puan", "🧭");
+ }
+}
+
+function restartRiasec() {
+ playTone("click");
+ riasecIndex = 0;
+ riasecScores = { R: 0, I: 0, A: 0, S: 0, E: 0, C: 0 };
+ document.getElementById("riasecResultCard").classList.add("hidden");
+ document.getElementById("riasecQuizCard").classList.remove("hidden");
+ renderRiasecQuestion();
+}
+
+// BDT DÜŞÜNCE DÖNÜŞTÜRÜCÜ
+function saveCbtThought() {
+ const neg = document.getElementById("cbtNegInput").value.trim();
+ const evid = document.getElementById("cbtEvidInput").value.trim();
+ const pos = document.getElementById("cbtPosInput").value.trim();
+
+ if (!neg || !pos) {
+  showToast("Lütfen olumsuz ve yeni düşünceni yaz", "⚠️");
+  return;
+ }
+
+ playTone("correct");
+ cbtThoughts.unshift({ id: Date.now(), neg, evid, pos });
+ if (cbtThoughts.length > 5) cbtThoughts.pop();
+ localStorage.setItem("dd_cbt", JSON.stringify(cbtThoughts));
+
+ document.getElementById("cbtNegInput").value = "";
+ document.getElementById("cbtEvidInput").value = "";
+ document.getElementById("cbtPosInput").value = "";
+
+ totalPoints += 10;
+ saveStats();
+ updateProgress();
+ renderCbtHistory();
+ showToast("Düşünce dönüştürüldü! +10 Puan", "🧠");
+}
+
+function deleteCbtThought(id) {
+ cbtThoughts = cbtThoughts.filter(t => t.id !== id);
+ localStorage.setItem("dd_cbt", JSON.stringify(cbtThoughts));
+ renderCbtHistory();
+}
+
+function renderCbtHistory() {
+ const list = document.getElementById("cbtHistoryList");
+ list.innerHTML = "";
+ cbtThoughts.forEach(t => {
+  const box = document.createElement("div");
+  box.className = "request-card";
+  box.innerHTML = `
+   <div class="request-top">
+    <span class="badge-mini">BDT Dönüşüm</span>
+    <button class="del-btn" onclick="deleteCbtThought(${t.id})" title="Sil">✕</button>
+   </div>
+   <p style="font-size:12.5px; color:var(--text-muted); margin:0 0 4px;">❌ <span class="neg-t"></span></p>
+   <p style="font-size:13px; font-weight:600; color:var(--primary); margin:0;">✅ <span class="pos-t"></span></p>
+  `;
+  box.querySelector(".neg-t").textContent = t.neg;
+  box.querySelector(".pos-t").textContent = t.pos;
+  list.appendChild(box);
+ });
+}
+
+// ARKADAŞA TEŞEKKÜR KARTI OLUŞTURUCU
+function updateCardPreview() {
+ const toName = document.getElementById("cardToInput").value.trim();
+ const msg = document.getElementById("cardTemplateSelect").value;
+ document.getElementById("cardPreviewTitle").innerText = toName ? `Sevgili ${toName},` : "Sevgili Arkadaşım,";
+ document.getElementById("cardPreviewBody").innerText = msg;
+}
+
+function copyGratitudeCard() {
+ const title = document.getElementById("cardPreviewTitle").innerText;
+ const body = document.getElementById("cardPreviewBody").innerText;
+ const fullText = `${title}\n${body}\n— Dijital Dünyam Akran Desteği 💌`;
+
+ if (navigator.clipboard) {
+  navigator.clipboard.writeText(fullText).catch(() => {});
+ }
+ playTone("correct");
+ totalPoints += 5;
+ saveStats();
+ updateProgress();
+ showToast("Kart kopyalandı! +5 Puan kazandın", "💌");
+}
+
+// 5-4-3-2-1 TOPRAKLANMA TEKNİĞİ
+const groundingSteps = [
+ { num: 5, title: "Etrafında görebildiğin 5 şeyi fark et", desc: "Odanın içindeki nesnelere, renklere veya ışığa dikkatlice bak ve içinden say." },
+ { num: 4, title: "Dokunabildiğin 4 şeyi hisset", desc: "Kıyafetinin dokusunu, masanın yüzeyini veya ayaklarının yere temasını hisset." },
+ { num: 3, title: "Duyabildiğin 3 sese odaklan", desc: "Dışarıdan gelen sesleri, nefes alışverişini veya odadaki ince sesleri dinle." },
+ { num: 2, title: "Koklayabildiğin 2 kokuyu fark et", desc: "Ortamın havasını veya yakındaki bir nesnenin kokusunu sakince içine çek." },
+ { num: 1, title: "Kendine 1 güven cümlesi söyle", desc: "'Şu an güvendeyim ve bu duygu geçici' diyerek derin bir nefes al." }
+];
+let groundingIdx = 0;
+
+function nextGroundingStep() {
+ playTone("click");
+ groundingIdx = (groundingIdx + 1) % groundingSteps.length;
+ const s = groundingSteps[groundingIdx];
+ document.getElementById("groundNum").innerText = s.num;
+ document.getElementById("groundTitle").innerText = s.title;
+ document.getElementById("groundDesc").innerText = s.desc;
+ document.getElementById("groundBtn").innerText = groundingIdx === groundingSteps.length - 1 ? "Başa Dön ↻" : "Sonraki Adım →";
+ if (groundingIdx === 0) showToast("Topraklanma egzersizi tamamlandı", "🌿");
+}
+
+// GÜVENLİ ÇEMBERİM
+function addSafePerson() {
+ const nameIn = document.getElementById("circleNameInput");
+ const noteIn = document.getElementById("circleNoteInput");
+ const name = nameIn.value.trim();
+ const note = noteIn.value.trim() || "Güvenilir Destek";
+ if (!name) return;
+
+ playTone("click");
+ safeCircle.push({ id: Date.now(), name, note });
+ nameIn.value = "";
+ noteIn.value = "";
+ localStorage.setItem("dd_safe_circle", JSON.stringify(safeCircle));
+ renderSafeCircle();
+ showToast("Güvenli çemberine eklendi", "🛡️");
+}
+
+function deleteSafePerson(id) {
+ safeCircle = safeCircle.filter(p => p.id !== id);
+ localStorage.setItem("dd_safe_circle", JSON.stringify(safeCircle));
+ renderSafeCircle();
+}
+
+function renderSafeCircle() {
+ const list = document.getElementById("safeCircleList");
+ list.innerHTML = "";
+ safeCircle.forEach(p => {
+  const item = document.createElement("div");
+  item.className = "list-item";
+  item.innerHTML = `
+   <div>
+    <strong style="font-size:14px; display:block;"></strong>
+    <small class="muted"></small>
+   </div>
+   <button class="del-btn" onclick="deleteSafePerson(${p.id})" title="Sil">✕</button>
+  `;
+  item.querySelector("strong").textContent = p.name;
+  item.querySelector("small").textContent = p.note;
+  list.appendChild(item);
+ });
+}
+
+const allBadges = [
+ { id: "Empati", icon: "🤝", desc: "Empati oyununu tamamladın" },
+ { id: "Akran Zorbalığı", icon: "🛡️", desc: "Zorbalığa karşı bilinçlendin" },
+ { id: "Kaygı Yönetimi", icon: "🌿", desc: "Sakinleşme yollarını öğrendin" },
+ { id: "Özgüven", icon: "⭐", desc: "Güçlü yönlerini keşfettin" },
+ { id: "Kariyer & İlgi", icon: "🧭", desc: "Gelecek rotanı çizmeye başladın" },
+ { id: "Dijital Denge", icon: "📱", desc: "Bilinçli teknoloji kullanımını öğrendin" },
+ { id: "Kariyer Kaşifi", icon: "🎓", desc: "İlgi ve yetenek envanterini çözdün" }
+];
+
+const moodIcons = {
+ "Mutlu": "😊",
+ "Sakin": "😌",
+ "Yorgun": "😴",
+ "Kaygılı": "😟",
+ "Kızgın": "😠"
+};
+
+const moodResponses = {
+ "Mutlu": "Harika! Bu güzel enerjini yeni bir hedef belirleyerek veya bir arkadaşına teşekkür kartı göndererek paylaşabilirsin.",
+ "Sakin": "Dengeli ve huzurlu bir ruh hali öğrenmek ve kendini keşfetmek için en verimli zamandır.",
+ "Yorgun": "Zihninin ve bedeninin dinlenmeye ihtiyacı olabilir. Bugün kendine küçük molalar vermeyi unutma.",
+ "Kaygılı": "Kaygı hissetmen çok doğal. Destek sekmesindeki BDT Düşünce Dönüştürücü veya Başa Çıkma Çantanı deneyebilirsin.",
+ "Kızgın": "Öfke bir sinyaldir. Tepki vermeden önce derin bir nefes alıp bu duygunun neyden kaynaklandığını düşünebilirsin."
+};
+
+const messages = [
+ "Kendine inan. Gelişim küçük adımlarla başlar.",
+ "Her gün kendini biraz daha tanıyabilirsin.",
+ "Hata yapmak öğrenmenin en doğal parçasıdır.",
+ "Kendine zaman tanı. Herkesin gelişim hızı farklıdır.",
+ "Küçük hedefler büyük değişimlerin başlangıcıdır.",
+ "Duygularını fark etmek, onları yönetmenin ilk adımıdır.",
+ "Bugün kendine nazik davranmayı unutma."
+];
+
+let currentGame = null;
+let currentGameKey = "";
+let currentQuestions = [];
+let questionIndex = 0;
+let gamePoints = 0;
+let answered = false;
+let gameFinished = false;
+let lastMessageIndex = 0;
+
+// SAYFA GEÇİŞLERİ
+function showPage(id, button) {
+ playTone("click");
+ document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+ document.getElementById(id).classList.add("active");
+
+ document.querySelectorAll("nav button").forEach(b => b.classList.remove("active"));
+ if (button) {
+  button.classList.add("active");
+ } else {
+  const index = ["home", "focus", "games", "riasec", "support", "goals", "counseling", "progress"].indexOf(id);
+  if (index > -1) document.querySelectorAll("nav button")[index].classList.add("active");
+ }
+
+ document.querySelectorAll(".drawer-item").forEach(item => {
+  item.classList.toggle("active", item.dataset.page === id);
+ });
+
+ if (id === "progress") { updateProgress(); renderWeeklyMoodChart(); renderActivityDistribution(); }
+ if (id === "goals") renderGoals();
+ if (id === "counseling") { renderRequests(); updateCounselorPulse(); }
+ if (id === "focus") { renderChecklist(); renderEvents(); updateLifeBalance(); }
+ if (id === "support") { renderSafeCircle(); renderCbtHistory(); renderCopingKit(); }
+ if (id === "riasec") { renderStrengthChips(); renderTimeCapsules(); }
+ updateSummaryCards();
+ window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+// TEMA DEĞİŞTİRME
+function applyTheme() {
+ document.body.classList.toggle("dark", isDark);
+ document.getElementById("themeBtn").innerText = isDark ? "☀️" : "🌙";
+ document.getElementById("soundBtn").innerText = soundEnabled ? "🔊" : "🔇";
+}
+
+function toggleTheme() {
+ isDark = !isDark;
+ localStorage.setItem("dd_theme", isDark ? "dark" : "light");
+ applyTheme();
+ playTone("click");
+}
+
+// KADEME SEÇİMİ
+function setLevel(level) {
+ playTone("click");
+ selectedLevel = level;
+ localStorage.setItem("dd_level", level);
+
+ document.querySelectorAll(".level").forEach(b => {
+  b.classList.toggle("active", b.dataset.level === level);
+ });
+
+ document.getElementById("levelText").innerHTML = `Seçilen kademe: <strong>${level}</strong> (Sorular kademene göre uyarlandı)`;
+ document.getElementById("headerLevelBadge").innerText = level;
+ document.getElementById("gameLevelInfo").innerHTML = `<strong>${level}</strong> kademesine uygun senaryoları çöz. Her doğru cevap <strong>10 puan</strong> kazandırır.`;
+ updateDrawerInfo();
+}
+
+// DUYGU DURUM SEÇİCİ & 7 GÜNLÜK KAYIT
+function selectMood(mood, btn) {
+ playTone("click");
+ todayMood = mood;
+ localStorage.setItem("dd_mood", mood);
+
+ const todayKey = new Date().toISOString().slice(0, 10);
+ const dayName = new Date().toLocaleDateString("tr-TR", { weekday: "short" });
+ const existingIdx = moodHistory.findIndex(m => m.date === todayKey);
+ if (existingIdx > -1) {
+  moodHistory[existingIdx].mood = mood;
+ } else {
+  moodHistory.push({ date: todayKey, day: dayName, mood });
+  if (moodHistory.length > 7) moodHistory.shift();
+ }
+ localStorage.setItem("dd_mood_hist", JSON.stringify(moodHistory));
+
+ document.querySelectorAll(".mood-btn").forEach(b => b.classList.remove("active"));
+ if (btn) btn.classList.add("active");
+ const box = document.getElementById("moodFeedback");
+ box.innerHTML = `<strong>${mood} hissediyorsun:</strong> ${moodResponses[mood]}`;
+ box.classList.remove("hidden");
+ updateSummaryCards();
+ renderWeeklyMoodChart();
+ showToast(`Duygu durumun kaydedildi: ${mood}`, moodIcons[mood]);
+}
+
+function renderWeeklyMoodChart() {
+ const container = document.getElementById("weeklyMoodChart");
+ container.innerHTML = "";
+ const last7 = moodHistory.slice(-7);
+
+ if (last7.length === 0) {
+  container.innerHTML = `<p class="muted" style="grid-column:1/-1; text-align:center; padding:8px 0;">Henüz duygu kaydı bulunmuyor.</p>`;
+  return;
+ }
+
+ last7.forEach(item => {
+  const col = document.createElement("div");
+  col.className = "mood-day-col";
+  col.innerHTML = `<span>${moodIcons[item.mood] || "🙂"}</span><small>${item.day}</small>`;
+  container.appendChild(col);
+ });
+}
+
+// ŞÜKRAN & DUYGU GÜNLÜĞÜ
+function addJournalEntry() {
+ const input = document.getElementById("journalInput");
+ const text = input.value.trim();
+ if (!text) return;
+
+ playTone("correct");
+ const dateStr = new Date().toLocaleDateString("tr-TR", { day: "numeric", month: "short" });
+ journalEntries.unshift({ id: Date.now(), text, mood: todayMood || "Not", date: dateStr });
+ if (journalEntries.length > 10) journalEntries.pop();
+
+ input.value = "";
+ localStorage.setItem("dd_journal", JSON.stringify(journalEntries));
+ totalPoints += 5;
+ saveStats();
+ updateProgress();
+ renderJournal();
+ showToast("Günlük notun kaydedildi! +5 Puan", "✍️");
+}
+
+function deleteJournalEntry(id) {
+ journalEntries = journalEntries.filter(j => j.id !== id);
+ localStorage.setItem("dd_journal", JSON.stringify(journalEntries));
+ renderJournal();
+}
+
+function renderJournal() {
+ const list = document.getElementById("journalList");
+ list.innerHTML = "";
+ journalEntries.slice(0, 3).forEach(j => {
+  const row = document.createElement("div");
+  row.className = "list-item";
+  row.style.padding = "9px 12px";
+  row.innerHTML = `
+   <div style="font-size:13px;">
+    <span class="badge-mini" style="margin-right:6px;">${j.date}</span>
+    <span class="j-text"></span>
+   </div>
+   <button class="del-btn" onclick="deleteJournalEntry(${j.id})" title="Sil">✕</button>
+  `;
+  row.querySelector(".j-text").textContent = j.text;
+  list.appendChild(row);
+ });
+}
+
+// AKILLI GÜNLÜK ÖZET KARTLARI GÜNCELLEME
+function updateSummaryCards() {
+ document.getElementById("sumMood").innerText = todayMood ? `${moodIcons[todayMood]} ${todayMood}` : "Belirlenmedi";
+ document.getElementById("sumMoodSub").innerText = todayMood ? `Şiddet: ${moodIntensity}/10` : "Şiddet: -/10";
+
+ const doneChk = checklist.filter(c => c.done).length;
+ const totalChk = checklist.length;
+ const pctChk = totalChk > 0 ? Math.round((doneChk / totalChk) * 100) : 0;
+ document.getElementById("sumChecklist").innerText = `%${pctChk}`;
+ document.getElementById("sumChecklistSub").innerText = `${doneChk}/${totalChk} madde hazır`;
+
+ document.getElementById("sumFocus").innerText = `${focusMinutes} dk`;
+
+ if (events.length > 0) {
+  const sorted = [...events].sort((a, b) => new Date(a.date) - new Date(b.date));
+  const nextEv = sorted[0];
+  const diffDays = getDaysLeft(nextEv.date);
+  document.getElementById("sumEvent").innerText = diffDays < 0 ? "Geçti" : diffDays === 0 ? "Bugün!" : `${diffDays} Gün`;
+  document.getElementById("sumEventSub").innerText = nextEv.title;
+ } else {
+  document.getElementById("sumEvent").innerText = "-";
+  document.getElementById("sumEventSub").innerText = "Planlanmış tarih yok";
+ }
+}
+
+// AKTİVİTE DAĞILIM GRAFİĞİ
+function renderActivityDistribution() {
+ const gamesVal = Math.max(1, completed * 3);
+ const focusVal = Math.max(1, Math.round(focusMinutes / 10));
+ const cbtVal = Math.max(1, cbtThoughts.length * 3);
+ const goalsVal = Math.max(1, goals.filter(g => g.done).length * 2);
+ const total = gamesVal + focusVal + cbtVal + goalsVal;
+
+ const pGames = Math.round((gamesVal / total) * 100);
+ const pFocus = Math.round((focusVal / total) * 100);
+ const pCbt = Math.round((cbtVal / total) * 100);
+ const pGoals = Math.max(0, 100 - pGames - pFocus - pCbt);
+
+ const bar = document.getElementById("activityDistBar");
+ bar.innerHTML = `
+  <div style="width:${pGames}%; background:#0d9488;"></div>
+  <div style="width:${pFocus}%; background:#6366f1;"></div>
+  <div style="width:${pCbt}%; background:#f59e0b;"></div>
+  <div style="width:${pGoals}%; background:#10b981;"></div>
+ `;
+
+ document.getElementById("activityDistLegend").innerHTML = `
+  <span>🟢 Oyunlar: <b>%${pGames}</b></span>
+  <span>🟣 Odaklanma: <b>%${pFocus}</b></span>
+  <span>🟠 BDT Çalışması: <b>%${pCbt}</b></span>
+  <span>💠 Hedefler: <b>%${pGoals}</b></span>
+ `;
+
+ const areas = [
+  { name: "Sosyal & Duygusal Farkındalık", val: gamesVal },
+  { name: "Zaman & Odak Yönetimi", val: focusVal },
+  { name: "Bilişsel Esneklik (BDT)", val: cbtVal },
+  { name: "Öz-Düzenleme & Hedef Takibi", val: goalsVal }
+ ].sort((a, b) => b.val - a.val);
+
+ document.getElementById("strongestAreaText").innerHTML = `En güçlü gelişim alanın: <strong>${areas[0].name}</strong>`;
+}
+
+// POMODORO SVG RING ZAMANLAYICISI
+let timerMode = "focus";
+let timerTotalSeconds = 25 * 60;
+let timerSeconds = 25 * 60;
+let timerInterval = null;
+let timerRunning = false;
+
+function setTimerMode(mode) {
+ playTone("click");
+ clearInterval(timerInterval);
+ timerRunning = false;
+ timerMode = mode;
+ timerTotalSeconds = mode === "focus" ? 25 * 60 : 5 * 60;
+ timerSeconds = timerTotalSeconds;
+
+ document.getElementById("modeFocusBtn").classList.toggle("active", mode === "focus");
+ document.getElementById("modeBreakBtn").classList.toggle("active", mode === "break");
+ document.getElementById("timerRingLabel").innerText = mode === "focus" ? "ODAK MODU" : "MOLA MODU";
+ document.getElementById("timerStartBtn").innerText = "Başlat";
+ document.getElementById("breakTipBox").classList.toggle("hidden", mode === "focus");
+ updateTimerUI();
+}
+
+function updateTimerUI() {
+ const m = String(Math.floor(timerSeconds / 60)).padStart(2, "0");
+ const s = String(timerSeconds % 60).padStart(2, "0");
+ document.getElementById("timerDisplay").innerText = `${m}:${s}`;
+ document.getElementById("focusMinutesText").innerText = focusMinutes;
+
+ const circumference = 471;
+ const ratio = timerSeconds / timerTotalSeconds;
+ const offset = circumference * (1 - ratio);
+ document.getElementById("timerRingFill").style.strokeDashoffset = offset;
+}
+
+function toggleTimer() {
+ playTone("click");
+ const btn = document.getElementById("timerStartBtn");
+
+ if (timerRunning) {
+  clearInterval(timerInterval);
+  timerRunning = false;
+  btn.innerText = "Devam Et";
+  return;
+ }
+
+ timerRunning = true;
+ btn.innerText = "Duraklat";
+
+ timerInterval = setInterval(() => {
+  if (timerSeconds > 0) {
+   timerSeconds--;
+   updateTimerUI();
+  } else {
+   clearInterval(timerInterval);
+   timerRunning = false;
+   btn.innerText = "Başlat";
+   playTone("win");
+   launchConfetti();
+
+   if (timerMode === "focus") {
+    focusMinutes += 25;
+    totalPoints += 15;
+    localStorage.setItem("dd_focus_min", focusMinutes);
+    saveStats();
+    updateProgress();
+    updateSummaryCards();
+    showToast("Harika odaklanma! +15 Puan kazandın.", "⏱️");
+    setTimerMode("break");
+   } else {
+    showToast("Mola tamamlandı! Yeni oturuma hazırsın.", "🌿");
+    setTimerMode("focus");
+   }
+  }
+ }, 1000);
+}
+
+function resetTimer() {
+ playTone("click");
+ setTimerMode(timerMode);
+}
+
+// GÜNE HAZIRLIK KONTROL LİSTESİ
+function addChecklistItem() {
+ const input = document.getElementById("checkInput");
+ const text = input.value.trim();
+ if (!text) return;
+
+ playTone("click");
+ checklist.push({ id: Date.now(), text, done: false });
+ input.value = "";
+ saveChecklist();
+ renderChecklist();
+ showToast("Hazırlık maddesi eklendi", "🎒");
+}
+
+function toggleChecklistItem(id) {
+ const item = checklist.find(c => c.id === id);
+ if (!item) return;
+ item.done = !item.done;
+ if (item.done) playTone("correct");
+
+ const allDone = checklist.length > 0 && checklist.every(c => c.done);
+ if (allDone && !checklistRewarded) {
+  checklistRewarded = true;
+  localStorage.setItem("dd_chk_rewarded", "true");
+  totalPoints += 10;
+  saveStats();
+  updateProgress();
+  launchConfetti();
+  showToast("Tüm hazırlıklar tamam! +10 Bonus Puan", "🎉");
+ }
+
+ saveChecklist();
+ renderChecklist();
+}
+
+function deleteChecklistItem(id) {
+ checklist = checklist.filter(c => c.id !== id);
+ saveChecklist();
+ renderChecklist();
+}
+
+function saveChecklist() {
+ localStorage.setItem("dd_checklist", JSON.stringify(checklist));
+ updateSummaryCards();
+}
+
+function renderChecklist() {
+ const container = document.getElementById("checklistContainer");
+ const doneCount = checklist.filter(c => c.done).length;
+ const totalCount = checklist.length;
+ const pct = totalCount > 0 ? Math.round((doneCount / totalCount) * 100) : 0;
+
+ document.getElementById("checklistProgress").style.width = `${pct}%`;
+ document.getElementById("checklistStats").innerText = `${doneCount} / ${totalCount} madde tamamlandı (%${pct})`;
+
+ if (totalCount === 0) {
+  container.innerHTML = `<p class="muted" style="text-align:center; padding:10px 0;">Listen boş. Yukarıdan yeni madde ekleyebilirsin.</p>`;
+  return;
+ }
+
+ container.innerHTML = "";
+ checklist.forEach(c => {
+  const row = document.createElement("div");
+  row.className = "list-item" + (c.done ? " done" : "");
+  row.innerHTML = `
+   <label class="item-left">
+    <input type="checkbox" ${c.done ? "checked" : ""} onchange="toggleChecklistItem(${c.id})">
+    <span class="item-text"></span>
+   </label>
+   <button class="del-btn" onclick="deleteChecklistItem(${c.id})" title="Sil">✕</button>
+  `;
+  row.querySelector(".item-text").textContent = c.text;
+  container.appendChild(row);
+ });
+}
+
+// SINAV & ÖNEMLİ GÜN GERİ SAYIMI
+function getDaysLeft(dateStr) {
+ const today = new Date();
+ today.setHours(0, 0, 0, 0);
+ const target = new Date(dateStr);
+ target.setHours(0, 0, 0, 0);
+ return Math.round((target - today) / (1000 * 60 * 60 * 24));
+}
+
+function addEventItem() {
+ const titleInput = document.getElementById("eventTitleInput");
+ const dateInput = document.getElementById("eventDateInput");
+ const title = titleInput.value.trim();
+ const date = dateInput.value;
+
+ if (!title || !date) {
+  showToast("Lütfen etkinlik adı ve tarih seçin", "⚠️");
+  return;
+ }
+
+ playTone("click");
+ events.push({ id: Date.now(), title, date });
+ titleInput.value = "";
+ dateInput.value = "";
+ localStorage.setItem("dd_events", JSON.stringify(events));
+ renderEvents();
+ updateSummaryCards();
+ showToast("Tarih takvime eklendi", "📅");
+}
+
+function deleteEventItem(id) {
+ events = events.filter(e => e.id !== id);
+ localStorage.setItem("dd_events", JSON.stringify(events));
+ renderEvents();
+ updateSummaryCards();
+}
+
+function renderEvents() {
+ const container = document.getElementById("eventListContainer");
+ if (events.length === 0) {
+  container.innerHTML = `<p class="muted" style="text-align:center; padding:10px 0;">Henüz yaklaşan bir sınav veya etkinlik eklenmedi.</p>`;
+  return;
+ }
+
+ const sorted = [...events].sort((a, b) => new Date(a.date) - new Date(b.date));
+ container.innerHTML = "";
+
+ sorted.forEach(ev => {
+  const days = getDaysLeft(ev.date);
+  const isUrgent = days >= 0 && days <= 3;
+  const badgeText = days < 0 ? "Tamamlandı" : days === 0 ? "Bugün!" : `${days} gün kaldı`;
+  const formattedDate = new Date(ev.date).toLocaleDateString("tr-TR", { day: "numeric", month: "long" });
+
+  const card = document.createElement("div");
+  card.className = "request-card";
+  card.innerHTML = `
+   <div class="request-top">
+    <strong style="font-size:14px;"></strong>
+    <div style="display:flex; align-items:center; gap:6px;">
+     <span class="badge-mini ${isUrgent ? "urgent" : ""}">${badgeText}</span>
+     <button class="del-btn" onclick="deleteEventItem(${ev.id})" title="Sil">✕</button>
+    </div>
+   </div>
+   <small class="muted">Tarih: ${formattedDate}</small>
+   ${isUrgent ? `<div style="margin-top:8px; padding-top:8px; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; gap:8px;">
+    <span style="font-size:12px; color:var(--primary); font-weight:600;">🌿 Heyecanını dengelemek için BDT ve topraklanma araçlarını kullanabilirsin.</span>
+    <button class="secondary" style="padding:5px 10px; font-size:11.5px;" onclick="showPage('support')">Rahatla</button>
+   </div>` : ""}
+  `;
+  card.querySelector("strong").textContent = ev.title;
+  container.appendChild(card);
+ });
+}
+
+// OYUN MEKANİĞİ
+function startGame(type) {
+ playTone("click");
+ const levelToUse = selectedLevel || "Ortaokul";
+ if (!selectedLevel) setLevel("Ortaokul");
+
+ currentGameKey = type;
+ currentGame = gameBank[type];
+ currentQuestions = currentGame[levelToUse];
+ questionIndex = 0;
+ gamePoints = 0;
+ gameFinished = false;
+
+ document.getElementById("quiz").classList.remove("hidden");
+ showQuestion();
+ document.getElementById("quiz").scrollIntoView({ behavior: "smooth" });
+}
+
+function showQuestion() {
+ answered = false;
+ const q = currentQuestions[questionIndex];
+
+ document.getElementById("gameName").innerText = `${currentGame.icon} ${currentGame.name} (${selectedLevel})`;
+ document.getElementById("questionNumber").innerText = `Soru ${questionIndex + 1} / ${currentQuestions.length}`;
+ document.getElementById("questionProgress").style.width = `${((questionIndex + 1) / currentQuestions.length) * 100}%`;
+ document.getElementById("question").innerText = q[0];
+
+ const fb = document.getElementById("feedbackBox");
+ fb.classList.add("hidden");
+ fb.innerHTML = "";
+
+ const area = document.getElementById("options");
+ area.innerHTML = "";
+
+ const letters = ["A", "B", "C"];
+ q[1].forEach((option, index) => {
+  const b = document.createElement("button");
+  b.className = "question-option";
+  b.innerHTML = `<strong>${letters[index]})</strong> <span>${option}</span>`;
+  b.onclick = () => checkAnswer(index);
+  area.appendChild(b);
+ });
+
+ const next = document.getElementById("nextButton");
+ next.disabled = true;
+ next.innerText = questionIndex === currentQuestions.length - 1 ? "Oyunu tamamla" : "Sonraki soru";
+}
+
+function checkAnswer(choice) {
+ if (answered) return;
+ answered = true;
+
+ const q = currentQuestions[questionIndex];
+ const buttons = document.querySelectorAll(".question-option");
+
+ buttons.forEach((b, i) => {
+  b.disabled = true;
+  if (i === q[2]) b.classList.add("correct");
+  if (i === choice && i !== q[2]) b.classList.add("wrong");
+ });
+
+ const fb = document.getElementById("feedbackBox");
+ if (choice === q[2]) {
+  playTone("correct");
+  gamePoints += 10;
+  fb.innerHTML = `<strong>✅ Doğru cevap! (+10 Puan)</strong><br>${q[3]}`;
+ } else {
+  playTone("wrong");
+  fb.innerHTML = `<strong>💡 Rehberlik Notu:</strong><br>${q[3]}`;
+ }
+ fb.classList.remove("hidden");
+
+ document.getElementById("nextButton").disabled = false;
+}
+
+function handleNextAction() {
+ if (gameFinished) {
+  startGame(currentGameKey);
+  return;
+ }
+ if (!answered) return;
+
+ if (questionIndex < currentQuestions.length - 1) {
+  playTone("click");
+  questionIndex++;
+  showQuestion();
+ } else {
+  finishGame();
+ }
+}
+
+function finishGame() {
+ playTone("win");
+ launchConfetti();
+ gameFinished = true;
+ totalPoints += gamePoints;
+ completed++;
+
+ if (!earnedBadges.includes(currentGame.name)) {
+  earnedBadges.push(currentGame.name);
+ }
+
+ saveStats();
+ showToast(`Oyun tamamlandı! +${gamePoints} Puan`, "🏅");
+
+ document.getElementById("gameName").innerText = "OYUN TAMAMLANDI";
+ document.getElementById("questionNumber").innerText = "Sonuç";
+ document.getElementById("question").innerText = `Tebrikler! ${currentGame.name} tamamlandı.`;
+ document.getElementById("options").innerHTML = "";
+ document.getElementById("questionProgress").style.width = "100%";
+
+ const fb = document.getElementById("feedbackBox");
+ fb.innerHTML = `Bu oyundan <strong>${gamePoints} puan</strong> kazandın. Toplam puanın: <strong>${totalPoints}</strong>.<br>Rozet vitrinini <em>Gelişim</em> sekmesinden inceleyebilirsin.`;
+ fb.classList.remove("hidden");
+
+ const next = document.getElementById("nextButton");
+ next.disabled = false;
+ next.innerText = "↻ Bu oyunu tekrar oyna";
+
+ updateProgress();
+}
+
+// NEFES EGZERSİZİ
+let breathInterval = null;
+let breathingActive = false;
+
+function toggleBreathing() {
+ playTone("click");
+ const circle = document.getElementById("breathCircle");
+ const btn = document.getElementById("breathBtn");
+
+ if (breathingActive) {
+  clearInterval(breathInterval);
+  breathingActive = false;
+  circle.className = "breath-circle";
+  circle.innerText = "Hazır";
+  btn.innerText = "Egzersizi Başlat";
+  return;
+ }
+
+ breathingActive = true;
+ btn.innerText = "Durdur";
+ let step = 0;
+
+ const runStep = () => {
+  if (step === 0) {
+   circle.className = "breath-circle inhale";
+   circle.innerText = "Nefes Al (4s)";
+  } else if (step === 1) {
+   circle.className = "breath-circle hold";
+   circle.innerText = "Tut (4s)";
+  } else {
+   circle.className = "breath-circle exhale";
+   circle.innerText = "Nefes Ver (4s)";
+  }
+  step = (step + 1) % 3;
+ };
+
+ runStep();
+ breathInterval = setInterval(runStep, 4000);
+}
+
+// HEDEFLERİM MODÜLÜ
+function addGoal() {
+ const input = document.getElementById("goalInput");
+ const type = document.getElementById("goalTypeSelect").value;
+ const text = input.value.trim();
+ if (!text) return;
+
+ playTone("click");
+ goals.unshift({ id: Date.now(), type, text, done: false, rewarded: false });
+ input.value = "";
+ saveGoals();
+ renderGoals();
+ showToast("Hedef listene eklendi", "🎯");
+}
+
+function toggleGoal(id) {
+ const goal = goals.find(g => g.id === id);
+ if (!goal) return;
+ goal.done = !goal.done;
+
+ if (goal.done) {
+  playTone("correct");
+  if (!goal.rewarded) {
+   goal.rewarded = true;
+   totalPoints += 5;
+   saveStats();
+   updateProgress();
+   showToast("Hedef tamamlandı! +5 Puan", "⭐");
+  }
+ }
+ saveGoals();
+ renderGoals();
+}
+
+function deleteGoal(id) {
+ goals = goals.filter(g => g.id !== id);
+ saveGoals();
+ renderGoals();
+}
+
+function saveGoals() {
+ localStorage.setItem("dd_goals", JSON.stringify(goals));
+}
+
+function renderGoals() {
+ const list = document.getElementById("goalList");
+ const doneCount = goals.filter(g => g.done).length;
+ const totalCount = goals.length;
+ const pct = totalCount > 0 ? Math.round((doneCount / totalCount) * 100) : 0;
+
+ document.getElementById("goalProgress").style.width = `${pct}%`;
+ document.getElementById("goalProgressText").innerText = `${doneCount} / ${totalCount} hedef tamamlandı (%${pct})`;
+
+ if (totalCount === 0) {
+  list.innerHTML = `<p class="muted" style="text-align:center; padding:14px 0;">Henüz bir hedef eklemedin. Yukarıdan günlük veya haftalık hedefini ekleyebilirsin!</p>`;
+  return;
+ }
+
+ list.innerHTML = "";
+ goals.forEach(g => {
+  const item = document.createElement("div");
+  item.className = "list-item" + (g.done ? " done" : "");
+  rowHtml = `
+   <label class="item-left">
+    <input type="checkbox" ${g.done ? "checked" : ""} onchange="toggleGoal(${g.id})">
+    <span class="item-text"></span>
+   </label>
+   <span class="badge-mini">${g.type || "Günlük"}</span>
+   <button class="del-btn" onclick="deleteGoal(${g.id})" title="Sil">✕</button>
+  `;
+  item.innerHTML = rowHtml;
+  item.querySelector(".item-text").textContent = g.text;
+  list.appendChild(item);
+ });
+}
+
+// REHBERLİK SERVİSİ & DANIŞMAN PANELİ
+function updateCounselorPulse() {
+ const pulseBox = document.getElementById("counselorPulseStats");
+ if (!pulseBox) return;
+ const totalReq = requests.length;
+ const answeredReq = requests.filter(r => r.reply).length;
+ pulseBox.innerHTML = `📊 <strong>Okul İyi Oluş Özeti:</strong> Toplam Başvuru: <b>${totalReq}</b> • Yanıtlanan: <b>${answeredReq}</b> • Bekleyen: <b>${totalReq - answeredReq}</b>`;
+}
+
+function updatePinnedNotice() {
+ const val = document.getElementById("pinNoticeInput").value.trim();
+ if (!val) return;
+ pinnedNotice = val;
+ localStorage.setItem("dd_pinned_notice", pinnedNotice);
+ document.getElementById("pinnedNoticeText").innerText = pinnedNotice;
+ document.getElementById("pinNoticeInput").value = "";
+ showToast("Bülten duyurusu güncellendi", "📌");
+}
+
+function toggleCounselorMode() {
+ if (!counselorMode) {
+  const pin = prompt("Rehber Öğretmen (Danışman) Paneli Şifresini Girin (Varsayılan: 1234):");
+  if (pin !== "1234") {
+   showToast("Hatalı şifre girdiniz", "⚠️");
+   return;
+  }
+  counselorMode = true;
+  updateCounselorPulse();
+  showToast("Danışman modu aktif edildi", "👩‍⚕️");
+ } else {
+  counselorMode = false;
+  showToast("Öğrenci görünümüne dönüldü", "👤");
+ }
+
+ document.getElementById("counselorModeBtn").innerText = counselorMode ? "👤 Öğrenci Görünümü" : "🔐 Danışman Modu";
+ document.getElementById("counselMainTitle").innerText = counselorMode ? "Rehber Öğretmen Yönetim Paneli" : "Rehberlik Servisine Ulaş";
+ document.getElementById("requestListTitle").innerText = counselorMode ? "Gelen Öğrenci Başvuruları" : "Gönderdiğim Talepler";
+ document.getElementById("studentCounselForm").classList.toggle("hidden", counselorMode);
+ document.getElementById("counselorBanner").classList.toggle("hidden", !counselorMode);
+ renderRequests();
+}
+
+function toggleAnon() {
+ const isAnon = document.getElementById("anonCheck").checked;
+ document.getElementById("studentNameGroup").classList.toggle("hidden", isAnon);
+}
+
+function submitCounseling() {
+ const topic = document.getElementById("counselTopic").value;
+ const isAnon = document.getElementById("anonCheck").checked;
+ const name = isAnon ? "Anonim Öğrenci" : (document.getElementById("studentName").value.trim() || "İsim Belirtilmedi");
+ const msg = document.getElementById("counselMessage").value.trim();
+ const fb = document.getElementById("counselFeedback");
+
+ if (!msg) {
+  fb.innerHTML = "⚠️ Lütfen göndermeden önce mesajını veya sorunu yaz.";
+  fb.classList.remove("hidden");
+  return;
+ }
+
+ playTone("correct");
+ const now = new Date();
+ const dateStr = now.toLocaleDateString("tr-TR", { day: "2-digit", month: "long", year: "numeric" });
+
+ requests.unshift({
+  id: Date.now(),
+  topic,
+  sender: name,
+  message: msg,
+  date: dateStr,
+  status: "İletildi • İnceleniyor",
+  reply: ""
+ });
+
+ localStorage.setItem("dd_requests", JSON.stringify(requests));
+ document.getElementById("counselMessage").value = "";
+
+ fb.innerHTML = "✅ Talebin okul rehberlik servisi kaydına başarıyla eklendi. Gizlilik ilkesi kapsamında değerlendirilecektir.";
+ fb.classList.remove("hidden");
+ showToast("Rehberlik talebin kaydedildi", "💬");
+ renderRequests();
+}
+
+function replyToRequest(id) {
+ const req = requests.find(r => r.id === id);
+ if (!req) return;
+ const answer = prompt("Öğrenciye iletilecek rehberlik yanıtını veya randevu bilgisini yazın:", req.reply || "");
+ if (answer === null) return;
+
+ req.reply = answer.trim();
+ req.status = answer.trim() ? "Yanıtlandı ✓" : "Görüşme Planlandı";
+ localStorage.setItem("dd_requests", JSON.stringify(requests));
+ updateCounselorPulse();
+ renderRequests();
+ showToast("Danışman yanıtı kaydedildi", "✅");
+}
+
+function renderRequests() {
+ const list = document.getElementById("requestList");
+ if (requests.length === 0) {
+  list.innerHTML = `<p class="muted" style="text-align:center; padding:10px 0;">Henüz oluşturulmuş bir rehberlik talebi bulunmuyor.</p>`;
+  return;
+ }
+
+ list.innerHTML = "";
+ requests.forEach(r => {
+  const card = document.createElement("div");
+  card.className = "request-card";
+  card.innerHTML = `
+   <div class="request-top">
+    <strong style="font-size:13.5px;"></strong>
+    <span class="status-tag">${r.status}</span>
+   </div>
+   <p class="req-msg" style="font-size:13px; margin:4px 0 6px;"></p>
+   <small class="muted" style="font-size:11.5px; display:block;"></small>
+   ${r.reply ? `<div class="counselor-reply-box"><strong>👩‍⚕️ Rehber Öğretmen Yanıtı:</strong> <span class="rep-text"></span></div>` : ""}
+   ${counselorMode ? `<div style="margin-top:9px;"><button class="secondary" style="font-size:12px; padding:6px 12px;" onclick="replyToRequest(${r.id})">✍️ Yanıtla / Durum Güncelle</button></div>` : ""}
+  `;
+  card.querySelector("strong").textContent = r.topic;
+  card.querySelector(".req-msg").textContent = r.message;
+  card.querySelector("small").textContent = `${r.sender} • ${r.date}`;
+  if (r.reply) card.querySelector(".rep-text").textContent = r.reply;
+  list.appendChild(card);
+ });
+}
+
+// VERİ YEDEKLEME & GERİ YÜKLEME
+function exportBackupCode() {
+ const payload = {
+  level: selectedLevel,
+  points: totalPoints,
+  completed,
+  focusMinutes,
+  profileName,
+  profileClass,
+  badges: earnedBadges,
+  goals,
+  journal: journalEntries,
+  cbt: cbtThoughts,
+  strengths: selectedStrengths,
+  capsules: timeCapsules
+ };
+ const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+ if (navigator.clipboard) {
+  navigator.clipboard.writeText(encoded).catch(() => {});
+ }
+ prompt("Gelişim yedek kodun kopyalandı! Başka bir cihazda 'Yedek Kodundan Yükle' diyerek bu kodu yapıştırabilirsin:", encoded);
+}
+
+function importBackupCode() {
+ const code = prompt("Daha önce aldığın gelişim yedek kodunu buraya yapıştır:");
+ if (!code) return;
+ try {
+  const decoded = JSON.parse(decodeURIComponent(escape(atob(code.trim()))));
+  totalPoints = Number(decoded.points) || 0;
+  completed = Number(decoded.completed) || 0;
+  focusMinutes = Number(decoded.focusMinutes) || 0;
+  profileName = decoded.profileName || "";
+  profileClass = decoded.profileClass || "";
+  earnedBadges = decoded.badges || [];
+  goals = decoded.goals || [];
+  journalEntries = decoded.journal || [];
+  cbtThoughts = decoded.cbt || [];
+  selectedStrengths = decoded.strengths || [];
+  timeCapsules = decoded.capsules || [];
+
+  saveStats();
+  saveGoals();
+  localStorage.setItem("dd_focus_min", focusMinutes);
+  localStorage.setItem("dd_prof_name", profileName);
+  localStorage.setItem("dd_prof_class", profileClass);
+  localStorage.setItem("dd_journal", JSON.stringify(journalEntries));
+  localStorage.setItem("dd_cbt", JSON.stringify(cbtThoughts));
+  localStorage.setItem("dd_strengths", JSON.stringify(selectedStrengths));
+  localStorage.setItem("dd_capsules", JSON.stringify(timeCapsules));
+  if (decoded.level) setLevel(decoded.level);
+
+  applyProfileUI();
+  updateDrawerInfo();
+  updateProgress();
+  renderGoals();
+  renderJournal();
+  renderCbtHistory();
+  renderStrengthChips();
+  renderTimeCapsules();
+  updateSummaryCards();
+  showToast("Tüm gelişim verilerin geri yüklendi!", "✅");
+ } catch (e) {
+  showToast("Geçersiz yedek kodu", "⚠️");
+ }
+}
+
+// İLERLEME VE ROZETLER
+function saveStats() {
+ localStorage.setItem("dd_points", totalPoints);
+ localStorage.setItem("dd_completed", completed);
+ localStorage.setItem("dd_badges", JSON.stringify(earnedBadges));
+ updateMindGarden();
+ updateDrawerInfo();
+}
+
+function updateProgress() {
+ document.getElementById("headerPoints").innerText = totalPoints;
+ document.getElementById("totalPoints").innerText = totalPoints;
+ document.getElementById("completedGames").innerText = completed;
+ document.getElementById("badgeCount").innerText = `${earnedBadges.length}/${allBadges.length}`;
+ updateMindGarden();
+ updateDrawerInfo();
+
+ let rank = "Yeni Başlangıç";
+ let start = 0;
+ let limit = 60;
+
+ if (totalPoints >= 350) {
+  rank = "Gelişim Lideri";
+  start = 350;
+  limit = 600;
+ } else if (totalPoints >= 180) {
+  rank = "Farkındalık Elçisi";
+  start = 180;
+  limit = 350;
+ } else if (totalPoints >= 60) {
+  rank = "Meraklı Kaşif";
+  start = 60;
+  limit = 180;
+ }
+
+ document.getElementById("rank").innerText = rank;
+ const percent = Math.min(100, ((totalPoints - start) / (limit - start)) * 100);
+ document.getElementById("rankProgress").style.width = percent + "%";
+ document.getElementById("nextRank").innerText =
+  totalPoints >= 600
+   ? "En yüksek seviyeye ulaştın! Harikasın."
+   : `Sonraki seviyeye ulaşmak için ${Math.max(0, limit - totalPoints)} puan daha kazan.`;
+
+ const badgeArea = document.getElementById("badges");
+ badgeArea.innerHTML = "";
+ allBadges.forEach(b => {
+  const unlocked = earnedBadges.includes(b.id);
+  const div = document.createElement("div");
+  div.className = "badge-box" + (unlocked ? "" : " locked");
+  div.innerHTML = `
+   <span class="badge-icon">${b.icon}</span>
+   <div>
+    <strong>${b.id}</strong>
+    <small>${unlocked ? b.desc : "Kilitli Rozet"}</small>
+   </div>
+  `;
+  badgeArea.appendChild(div);
+ });
+}
+
+function newMessage() {
+ playTone("click");
+ let index;
+ do {
+  index = Math.floor(Math.random() * messages.length);
+ } while (index === lastMessageIndex && messages.length > 1);
+ lastMessageIndex = index;
+ document.getElementById("dailyMessage").innerText = `"${messages[index]}"`;
+}
+
+function resetProgress() {
+ if (!confirm("Tüm puanların, rozetlerin, hedeflerin, odak süren ve kayıtların sıfırlanacak. Emin misin?")) return;
+ localStorage.clear();
+ totalPoints = 0;
+ completed = 0;
+ focusMinutes = 0;
+ todayMood = "";
+ moodIntensity = 5;
+ profileName = "";
+ profileClass = "";
+ checklistRewarded = false;
+ earnedBadges = [];
+ goals = [];
+ requests = [];
+ events = [];
+ journalEntries = [];
+ moodHistory = [];
+ cbtThoughts = [];
+ selectedStrengths = [];
+ timeCapsules = [];
+ copingKit = [...defaultCoping];
+ safeCircle = JSON.parse(JSON.stringify(defaultSafeCircle));
+ checklist = JSON.parse(JSON.stringify(defaultChecklist));
+
+ applyProfileUI();
+ updateDrawerInfo();
+ updateProgress();
+ renderGoals();
+ renderRequests();
+ renderChecklist();
+ renderEvents();
+ renderJournal();
+ renderSafeCircle();
+ renderCbtHistory();
+ renderCopingKit();
+ renderStrengthChips();
+ renderTimeCapsules();
+ renderWeeklyMoodChart();
+ renderActivityDistribution();
+ updateSummaryCards();
+ showToast("Tüm veriler sıfırlandı", "🔄");
+}
+
+// BAŞLANGIÇ YÜKLEMELERİ
+updateStreak();
+renderLiveDate();
+applyTheme();
+applyProfileUI();
+document.getElementById("pinnedNoticeText").innerText = pinnedNotice;
+document.getElementById("thermoSlider").value = moodIntensity;
+updateThermometer(moodIntensity);
+if (selectedLevel) setLevel(selectedLevel);
+if (todayMood) {
+ const mBtn = document.querySelector(`.mood-btn[data-mood="${todayMood}"]`);
+ if (mBtn) mBtn.classList.add("active");
+}
+updateTimerUI();
+updateLifeBalance();
+updateProgress();
+renderGoals();
+renderRequests();
+renderChecklist();
+renderEvents();
+renderJournal();
+renderSafeCircle();
+renderCbtHistory();
+renderCopingKit();
+renderStrengthChips();
+renderTimeCapsules();
+renderWeeklyMoodChart();
+renderActivityDistribution();
+renderRiasecQuestion();
+updateSummaryCards();
+updateDrawerInfo();
+
+document.getElementById("goalInput").addEventListener("keypress", e => { if (e.key === "Enter") addGoal(); });
+document.getElementById("checkInput").addEventListener("keypress", e => { if (e.key === "Enter") addChecklistItem(); });
+document.getElementById("journalInput").addEventListener("keypress", e => { if (e.key === "Enter") addJournalEntry(); });
+</script>
+</body>
+</html>
